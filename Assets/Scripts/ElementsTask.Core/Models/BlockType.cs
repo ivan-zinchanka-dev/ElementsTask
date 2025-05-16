@@ -9,6 +9,11 @@ namespace ElementsTask.Core.Models
         [field:SerializeField]
         public string Id { get; private set; }
 
+        public BlockType(string id)
+        {
+            Id = id;
+        }
+
         public override bool Equals(object obj)
         {
             return Equals(obj as BlockType);
