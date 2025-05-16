@@ -2,7 +2,9 @@
     "name": "ElementsTask.Presentation",
     "rootNamespace": "ElementsTask.Presentation",
     "references": [
-        "GUID:1af9418552ca00b499ccb2d26b9b763f"
+        "GUID:1af9418552ca00b499ccb2d26b9b763f",
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
+        "GUID:7bce08a00b4d54cd694096abadbb897e"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

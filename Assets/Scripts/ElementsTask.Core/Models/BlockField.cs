@@ -1,14 +1,12 @@
-﻿using UnityEngine;
-
-namespace ElementsTask.Core.Models
+﻿namespace ElementsTask.Core.Models
 {
     public class BlockField
     {
-        private Block[,] _blocks;
+        public Block[,] Blocks { get; private set; }
 
         public BlockField(Block[,] blocks)
         {
-            _blocks = blocks;
+            Blocks = blocks;
         }
     }
 }

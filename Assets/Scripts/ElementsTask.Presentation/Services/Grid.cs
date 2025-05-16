@@ -8,25 +8,28 @@ namespace ElementsTask.Presentation.Services
         private Vector2 _cellSize = new Vector2(2, 2);
         [SerializeField]
         private Vector2Int _cellsCount = new Vector2Int(6, 9);
+
+        [SerializeField] 
+        public Transform[,] Cells { get; private set; }
         
-        private Transform[,] _cells;
-        
+
         [Sirenix.OdinInspector.Button]
-        private void Generate()
+        public void Generate()
         {
             Vector3 originPosition = transform.position;
             Vector3 currentPosition = originPosition;
             
-            Debug.Log("Generate");
+            Cells = new Transform[_cellsCount.y, _cellsCount.x];
             
             for (int i = 0; i < _cellsCount.y; i++)
             {
                 for (int j = 0; j < _cellsCount.x; j++)
                 {
-                    var go = new GameObject("w");
-                    go.transform.SetParent(transform);
-                    go.transform.position = currentPosition;
-
+                    var cell = new GameObject($"cell_{i}_{j}");
+                    cell.transform.SetParent(transform);
+                    cell.transform.position = currentPosition;
+                    Cells[i, j] = cell.transform; 
+                    
                     currentPosition.x += _cellSize.x;
                 }
 
@@ -39,8 +42,10 @@ namespace ElementsTask.Presentation.Services
         [Sirenix.OdinInspector.Button]
         private void Clear()
         {
-            
+            foreach (Transform cell in Cells)
+            {
+                DestroyImmediate(cell.gameObject);
+            }
         }
-
     }
 }
