@@ -1,12 +1,17 @@
 ﻿using ElementsTask.Core.Models;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 namespace ElementsTask.Presentation.Views
 {
-    public class BlockView : MonoBehaviour
+    public class BlockView : MonoBehaviour, IPointerDownHandler
     {
         [SerializeField] 
         private SpriteRenderer _spriteRenderer;
+        
+        [SerializeField]
+        private UnityEvent<BlockView> OnSelected;
         
         private Block _block;
 
@@ -22,5 +27,11 @@ namespace ElementsTask.Presentation.Views
             return this;
         }
 
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            Debug.Log("OnSelected");
+            
+            OnSelected?.Invoke(this);
+        }
     }
 }
