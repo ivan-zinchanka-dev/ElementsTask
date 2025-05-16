@@ -9,10 +9,10 @@ namespace ElementsTask.Presentation.Views
     {
         [SerializeField] 
         private SpriteRenderer _spriteRenderer;
-        
-        [SerializeField]
-        private UnityEvent<BlockView> OnSelected;
-        
+
+        [field:SerializeField] 
+        public UnityEvent<BlockView> OnSelected { get; private set; }
+
         private Block _block;
 
         public BlockView SetModel(Block block)
