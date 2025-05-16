@@ -9,17 +9,15 @@ namespace ElementsTask.Presentation.Services
         [SerializeField]
         private Vector2Int _cellsCount = new Vector2Int(6, 9);
 
-        [SerializeField] 
-        public Transform[,] Cells { get; private set; }
+        private Transform[,] _cells;
+        public Transform[,] Cells => _cells ??= GenerateCells();
         
-
-        [Sirenix.OdinInspector.Button]
-        public void Generate()
+        private Transform[,] GenerateCells()
         {
             Vector3 originPosition = transform.position;
             Vector3 currentPosition = originPosition;
             
-            Cells = new Transform[_cellsCount.y, _cellsCount.x];
+            var cells = new Transform[_cellsCount.y, _cellsCount.x];
             
             for (int i = 0; i < _cellsCount.y; i++)
             {
@@ -28,7 +26,7 @@ namespace ElementsTask.Presentation.Services
                     var cell = new GameObject($"cell_{i}_{j}");
                     cell.transform.SetParent(transform);
                     cell.transform.position = currentPosition;
-                    Cells[i, j] = cell.transform; 
+                    cells[i, j] = cell.transform; 
                     
                     currentPosition.x += _cellSize.x;
                 }
@@ -36,16 +34,8 @@ namespace ElementsTask.Presentation.Services
                 currentPosition.x = originPosition.x;
                 currentPosition.y += _cellSize.y;
             }
-
-        }
-
-        [Sirenix.OdinInspector.Button]
-        private void Clear()
-        {
-            foreach (Transform cell in Cells)
-            {
-                DestroyImmediate(cell.gameObject);
-            }
+            
+            return cells;
         }
     }
 }

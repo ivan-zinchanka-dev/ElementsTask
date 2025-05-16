@@ -18,8 +18,6 @@ namespace ElementsTask.Presentation.Management
         
         private void Awake()
         {
-            _grid.Generate();
-            
             BlockField blockField = _blockFieldCreator.Create();
 
             int currentSortingOrder = 0;
@@ -28,7 +26,6 @@ namespace ElementsTask.Presentation.Management
             {
                 for (int j = 0; j < blockField.Blocks.GetLength(1); j++)
                 {
-                    // TODO Refactor Grid
                     Transform cell = _grid.Cells[i, j];
                     _blockViewsFactory
                         .CreateBlockView(blockField.Blocks[i, j].Type, cell)
