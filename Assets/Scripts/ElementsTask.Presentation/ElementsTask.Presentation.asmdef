@@ -1,0 +1,16 @@
+{
+    "name": "ElementsTask.Presentation",
+    "rootNamespace": "ElementsTask.Presentation",
+    "references": [
+        "GUID:1af9418552ca00b499ccb2d26b9b763f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
