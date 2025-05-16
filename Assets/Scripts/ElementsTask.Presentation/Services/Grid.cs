@@ -9,10 +9,13 @@ namespace ElementsTask.Presentation.Services
         
         private Transform[,] _cells;
         
+        [Sirenix.OdinInspector.Button]
         private void Generate(int cellsCount)
         {
             Vector3 origin = transform.localPosition;
 
+            Debug.Log("Generate");
+            
             /*for (int i = 0; i < UPPER; i++)
             {
                 
