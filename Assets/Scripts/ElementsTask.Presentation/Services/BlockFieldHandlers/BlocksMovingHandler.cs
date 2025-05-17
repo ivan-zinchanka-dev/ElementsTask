@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using ElementsTask.Common.Extensions;
 using ElementsTask.Presentation.Enums;
 using ElementsTask.Presentation.Models;
 using ElementsTask.Presentation.Views;
@@ -57,52 +58,41 @@ namespace ElementsTask.Presentation.Services.BlockFieldHandlers
         
         private BlockView GetSwapPair(BlockView origin, BlockMovingDirection swapDirection)
         {
-            if (swapDirection == BlockMovingDirection.Up)
+            Vector2Int? targetPosition = null;
+            
+            switch (swapDirection)
             {
-                if (origin.GridPosition.y < _fieldSize.y - 1)
-                {
-                    return _blocks.Find(block => 
-                        block.GridPosition.x == origin.GridPosition.x && 
-                        block.GridPosition.y == origin.GridPosition.y + 1);
-                }
-
-                return null;
-            }
-            else if (swapDirection == BlockMovingDirection.Down)
-            {
-                if (origin.GridPosition.y > 0)
-                {
-                    return _blocks.Find(block => 
-                        block.GridPosition.x == origin.GridPosition.x && 
-                        block.GridPosition.y == origin.GridPosition.y - 1);
-                }
-
-                return null;
-            }
-            else if (swapDirection == BlockMovingDirection.Right)
-            {
-                if (origin.GridPosition.x < _fieldSize.x - 1)
-                {
-                    return _blocks.Find(block => 
-                        block.GridPosition.x == origin.GridPosition.x + 1 && 
-                        block.GridPosition.y == origin.GridPosition.y);
-                }
-
-                return null;
-            }
-            else if (swapDirection == BlockMovingDirection.Left)
-            {
-                if (origin.GridPosition.x > 0)
-                {
-                    return _blocks.Find(block => 
-                        block.GridPosition.x == origin.GridPosition.x - 1 && 
-                        block.GridPosition.y == origin.GridPosition.y);
-                }
-
-                return null;
+                case BlockMovingDirection.Up:
+                    if (origin.GridPosition.y < _fieldSize.y - 1)
+                    {
+                        targetPosition = origin.GridPosition.WithY(origin.GridPosition.y + 1);
+                    }
+                    break;
+                
+                case BlockMovingDirection.Down:
+                    if (origin.GridPosition.y > 0)
+                    {
+                        targetPosition = origin.GridPosition.WithY(origin.GridPosition.y - 1);
+                    }
+                    break;
+                
+                case BlockMovingDirection.Right:
+                    if (origin.GridPosition.x < _fieldSize.x - 1)
+                    {
+                        targetPosition = origin.GridPosition.WithX(origin.GridPosition.x + 1);
+                    }
+                    break;
+                
+                case BlockMovingDirection.Left:
+                    if (origin.GridPosition.x > 0)
+                    {
+                        targetPosition = origin.GridPosition.WithX(origin.GridPosition.x - 1);
+                    }
+                    break;
             }
 
-            return null;
+            return targetPosition.HasValue ? 
+                _blocks.Find(block => block.GridPosition == targetPosition.Value) : null;
         }
         
         private Tween BeginSwap(BlockView first, BlockView second)

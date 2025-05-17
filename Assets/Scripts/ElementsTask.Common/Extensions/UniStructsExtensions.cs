@@ -19,6 +19,20 @@ namespace ElementsTask.Common.Extensions
         }
         
 #endregion
+
+#region Vector2Int
+
+        public static Vector2Int WithX(this Vector2Int vector2, int x)
+        {
+            return new Vector2Int(x, vector2.y);
+        }
+        
+        public static Vector2Int WithY(this Vector2Int vector2, int y)
+        {
+            return new Vector2Int(vector2.x, y);
+        }
+        
+#endregion
         
 #region Vector3
 
@@ -35,6 +49,25 @@ namespace ElementsTask.Common.Extensions
         public static Vector3 WithZ(this Vector3 vector3, float z)
         {
             return new Vector3(vector3.x, vector3.y, z);
+        }
+
+#endregion
+
+#region Vector3Int
+
+        public static Vector3Int WithX(this Vector3Int vector3, int x)
+        {
+            return new Vector3Int(x, vector3.y, vector3.z);
+        }
+                
+        public static Vector3Int WithY(this Vector3Int vector3, int y)
+        {
+            return new Vector3Int(vector3.x, y, vector3.z);
+        }
+                
+        public static Vector3Int WithZ(this Vector3Int vector3, int z)
+        {
+            return new Vector3Int(vector3.x, vector3.y, z);
         }
 
 #endregion
