@@ -1,7 +1,9 @@
-﻿using ElementsTask.Common.Extensions;
+﻿using System.Collections.Generic;
+using ElementsTask.Common.Extensions;
 using ElementsTask.Core.Models;
 using ElementsTask.Core.Services;
 using ElementsTask.Presentation.Enums;
+using ElementsTask.Presentation.Models;
 using ElementsTask.Presentation.Services.Factories;
 using UnityEngine;
 using VContainer;
@@ -19,27 +21,31 @@ namespace ElementsTask.Presentation.Views
         private BlockFieldCreator _blockFieldCreator;
         [Inject] 
         private BlockViewsFactory _blockViewsFactory;
-        
-        private BlockView[,] _blocks;
-        private BlockView _selectedBlock;
 
+        private Vector2Int _size;
+        private List<BlockView> _blocks;
+        private BlockView _selectedBlock;
+        
         private void Awake()
         {
             BlockField fieldModel = _blockFieldCreator.Create();
-            _blocks = new BlockView[fieldModel.Width, fieldModel.Height];
+            
+            _size = new Vector2Int(fieldModel.Width, fieldModel.Height);
+            _blocks = new List<BlockView>(_size.x * _size.y);
             int currentSortingOrder = 0;
             
-            for (int i = 0; i < fieldModel.Width; i++)
+            for (int y = 0; y < fieldModel.Height; y++)
             {
-                for (int j = 0; j < fieldModel.Height; j++)
+                for (int x = 0; x < fieldModel.Width; x++)
                 {
-                    Transform cell = _grid.Cells[i, j];
+                    Transform cell = _grid.Cells[y, x];
                     BlockView createdBlock = _blockViewsFactory
-                        .CreateBlockView(fieldModel.Blocks[i, j].Type, cell)
-                        .SetModel(fieldModel.Blocks[i, j])
+                        .CreateBlockView(fieldModel.GetBlock(x, y).Type, cell)
+                        .SetModel(fieldModel.GetBlock(x, y))
+                        .SetGridPosition(new Vector2Int(x, y))
                         .SetSortingOrder(currentSortingOrder);
 
-                    _blocks[i, j] = createdBlock;
+                    _blocks.Add(createdBlock);
                     currentSortingOrder++;
                 }
             }
@@ -76,8 +82,14 @@ namespace ElementsTask.Presentation.Views
         {
             if (IsPointerDownReceived(out Vector3 pointerPosition) && _selectedBlock != null)
             {
-                MoveBlock(_selectedBlock, GetMovingDirection(pointerPosition - _selectedBlock.transform.position));
-                
+                BlockView pair = GetSwapPair(_selectedBlock, 
+                    GetMovingDirection(pointerPosition - _selectedBlock.transform.position));
+
+                if (pair != null)
+                {
+                    Swap(_selectedBlock, pair);
+                }
+
                 //GameObject.CreatePrimitive(PrimitiveType.Quad).transform.position = pointerPosition;
             }
         }
@@ -94,9 +106,67 @@ namespace ElementsTask.Presentation.Views
             }
         }
 
-        private void MoveBlock(BlockView block, BlockMovingDirection direction)
+        private void Swap(BlockView first, BlockView second)
         {
-            Debug.Log("Direction: " + direction);
+            BlockSwapData firstData = first.GetSwapData();
+            BlockSwapData secondData = second.GetSwapData();
+
+            first.transform.position = secondData.WorldPosition;
+            first.SetGridPosition(secondData.GridPosition);
+            
+            second.transform.position = firstData.WorldPosition;
+            second.SetGridPosition(firstData.GridPosition);
+        }
+
+
+        private BlockView GetSwapPair(BlockView origin, BlockMovingDirection swapDirection)
+        {
+            if (swapDirection == BlockMovingDirection.Up)
+            {
+                if (origin.GridPosition.y < _size.y - 1)
+                {
+                    return _blocks.Find(block => 
+                        block.GridPosition.x == origin.GridPosition.x && 
+                        block.GridPosition.y == origin.GridPosition.y + 1);
+                }
+
+                return null;
+            }
+            else if (swapDirection == BlockMovingDirection.Down)
+            {
+                if (origin.GridPosition.y > 0)
+                {
+                    return _blocks.Find(block => 
+                        block.GridPosition.x == origin.GridPosition.x && 
+                        block.GridPosition.y == origin.GridPosition.y - 1);
+                }
+
+                return null;
+            }
+            else if (swapDirection == BlockMovingDirection.Right)
+            {
+                if (origin.GridPosition.x < _size.x - 1)
+                {
+                    return _blocks.Find(block => 
+                        block.GridPosition.x == origin.GridPosition.x + 1 && 
+                        block.GridPosition.y == origin.GridPosition.y);
+                }
+
+                return null;
+            }
+            else if (swapDirection == BlockMovingDirection.Left)
+            {
+                if (origin.GridPosition.x > 0)
+                {
+                    return _blocks.Find(block => 
+                        block.GridPosition.x == origin.GridPosition.x - 1 && 
+                        block.GridPosition.y == origin.GridPosition.y);
+                }
+
+                return null;
+            }
+
+            return null;
         }
 
         private void OnDisable()

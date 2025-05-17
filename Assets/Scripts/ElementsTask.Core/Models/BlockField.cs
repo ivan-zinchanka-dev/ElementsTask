@@ -1,15 +1,32 @@
-﻿namespace ElementsTask.Core.Models
+﻿using UnityEngine;
+
+namespace ElementsTask.Core.Models
 {
     public class BlockField
     {
-        public Block[,] Blocks { get; private set; }
+        private readonly Block[,] _blocks;
 
-        public int Width => Blocks.GetLength(0);
-        public int Height => Blocks.GetLength(1);
+        public int Height => _blocks.GetLength(0);
+        public int Width => _blocks.GetLength(1);
         
         public BlockField(Block[,] blocks)
         {
-            Blocks = blocks;
+            _blocks = blocks;
+        }
+
+        public Block GetBlock(int x, int y)
+        {
+            return _blocks[y, x];
+        }
+        
+        public Block GetBlock(Vector2Int position)
+        {
+            return GetBlock(position.y, position.x);
+        }
+        
+        public Block GetBlock(in Vector2Int position)
+        {
+            return GetBlock(position.y, position.x);
         }
     }
 }
