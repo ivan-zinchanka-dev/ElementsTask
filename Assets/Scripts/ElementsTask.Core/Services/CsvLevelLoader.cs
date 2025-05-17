@@ -26,6 +26,8 @@ namespace ElementsTask.Core.Services
             }
 
             List<string[]> dataRows = await CsvReader.ReadDataRowsAsync(levelCsv.text);
+            
+            Resources.UnloadAsset(levelCsv);
             dataRows.Reverse();
             
             Block[,] blocks = new Block[dataRows.Count, LevelSize.x];
