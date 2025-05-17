@@ -9,32 +9,13 @@ namespace ElementsTask.Presentation.Management
 {
     public class GameSceneStartup : MonoBehaviour
     {
-        [Inject]
-        private BlockFieldCreator _blockFieldCreator;
-        [Inject] 
-        private BlockViewsFactory _blockViewsFactory;
-        [Inject] 
-        private Grid _grid;    
+        
         
         private void Awake()
         {
-            BlockField blockField = _blockFieldCreator.Create();
-
-            int currentSortingOrder = 0;
             
-            for (int i = 0; i < blockField.Blocks.GetLength(0); i++)
-            {
-                for (int j = 0; j < blockField.Blocks.GetLength(1); j++)
-                {
-                    Transform cell = _grid.Cells[i, j];
-                    _blockViewsFactory
-                        .CreateBlockView(blockField.Blocks[i, j].Type, cell)
-                        .SetModel(blockField.Blocks[i, j])
-                        .SetSortingOrder(currentSortingOrder);
-                    
-                    currentSortingOrder++;
-                }
-            }
+            
+            
         }
     }
 }

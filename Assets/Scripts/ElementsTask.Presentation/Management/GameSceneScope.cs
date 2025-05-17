@@ -1,5 +1,6 @@
 ﻿using ElementsTask.Core.Services;
 using ElementsTask.Presentation.Services.Factories;
+using ElementsTask.Presentation.Views;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -12,7 +13,7 @@ namespace ElementsTask.Presentation.Management
         [SerializeField] 
         private BlockViewsFactory _blockViewsFactory;
         [SerializeField]
-        private Grid _grid;
+        private BlockFieldView _blockFieldView;
         [SerializeField]
         private GameSceneStartup _gameSceneStartup;
         
@@ -20,7 +21,7 @@ namespace ElementsTask.Presentation.Management
         {
             builder.Register<BlockFieldCreator>(Lifetime.Singleton);
             builder.RegisterComponent<BlockViewsFactory>(_blockViewsFactory);
-            builder.RegisterComponent<Grid>(_grid);
+            builder.RegisterComponent<BlockFieldView>(_blockFieldView);
             builder.RegisterComponent<GameSceneStartup>(_gameSceneStartup);
         }
     }

@@ -216,7 +216,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -334,7 +334,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &718714987
 GameObject:
@@ -380,37 +380,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba60a92298c74e0492112dc1395fdb85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1130817805
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1130817806}
-  m_Layer: 0
-  m_Name: blocks_field
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1130817806
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1130817805}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1479904741
 GameObject:
   m_ObjectHideFlags: 0
@@ -448,7 +417,7 @@ MonoBehaviour:
   - {fileID: 412412614}
   - {fileID: 1496941452}
   _blockViewsFactory: {fileID: 412412616}
-  _grid: {fileID: 1496941453}
+  _blockFieldView: {fileID: 1496941455}
   _gameSceneStartup: {fileID: 718714989}
 --- !u!4 &1479904744
 Transform:
@@ -465,7 +434,7 @@ Transform:
   - {fileID: 412412615}
   - {fileID: 718714988}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1496941452
 GameObject:
@@ -476,9 +445,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1496941454}
+  - component: {fileID: 1496941455}
   - component: {fileID: 1496941453}
   m_Layer: 0
-  m_Name: grid
+  m_Name: blocks_field
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -511,8 +481,21 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1496941455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1496941452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90df7b0ce6a64187a45d22f7ad6ff32b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _grid: {fileID: 1496941453}
 --- !u!1 &1735532779
 GameObject:
   m_ObjectHideFlags: 0
