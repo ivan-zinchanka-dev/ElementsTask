@@ -47,7 +47,7 @@ namespace ElementsTask.Presentation.Views
 
         public BlockSwapData GetSwapData()
         {
-            return new BlockSwapData(transform.position, _gridPosition);
+            return new BlockSwapData(transform.position, _gridPosition, _spriteRenderer.sortingOrder);
         }
     }
 }

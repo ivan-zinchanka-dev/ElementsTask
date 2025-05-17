@@ -112,10 +112,14 @@ namespace ElementsTask.Presentation.Views
             BlockSwapData secondData = second.GetSwapData();
 
             first.transform.position = secondData.WorldPosition;
-            first.SetGridPosition(secondData.GridPosition);
+            first
+                .SetGridPosition(secondData.GridPosition)
+                .SetSortingOrder(secondData.SortingOrder);
             
             second.transform.position = firstData.WorldPosition;
-            second.SetGridPosition(firstData.GridPosition);
+            second
+                .SetGridPosition(firstData.GridPosition)
+                .SetSortingOrder(firstData.SortingOrder);
         }
 
 
