@@ -20,6 +20,7 @@ namespace ElementsTask.Presentation.Management
         
         protected override void Configure(IContainerBuilder builder)
         {
+            builder.Register<IPlayerProgressService, PlayerProgressService>(Lifetime.Singleton);
             builder.Register<ILevelLoader, CsvLevelLoader>(Lifetime.Singleton);
             builder.Register<BlockFieldCreator>(Lifetime.Singleton);
             

@@ -1,71 +1,22 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using ElementsTask.Core.Models;
 
 namespace ElementsTask.Core.Services
 {
     public class BlockFieldCreator
     {
+        private readonly IPlayerProgressService _playerProgressService;
         private readonly ILevelLoader _levelLoader;
-        
-        private readonly List<BlockField> _levels = new List<BlockField>()
-        {
-            new BlockField(new Block[,]
-            {
-                { Empty, Water, Empty, Water, Fire, Fire },
-                { Empty, Water, Empty, Fire, Empty, Empty },
-            }),
-            new BlockField(new Block[,]
-            {
-                { Empty, Water, Fire, Water, Water, Empty },
-                { Empty, Water, Fire, Water, Water, Empty },
-                { Empty, Fire, Water, Fire, Fire, Empty },
-                { Empty, Water, Fire, Water, Water, Empty },
-                { Empty, Water, Water, Empty, Empty, Empty },
-            }),
-            new BlockField(new Block[,]
-            {
-                { Empty, Water, Fire, Water, Water, Empty },
-                { Empty, Water, Fire, Water, Water, Empty },
-                { Empty, Fire, Water, Fire, Fire, Empty },
-                
-                { Empty, Water, Water, Empty, Water, Empty },
-                { Empty, Water, Fire, Empty, Empty, Empty },
-                { Empty, Water, Empty, Empty, Empty, Empty },
-            }),
-            new BlockField(new Block[,]
-            {
-                { Fire, Water, Fire, Water, Water, Fire },
-                { Fire, Water, Fire, Water, Water, Fire },
-                { Fire, Fire, Water, Fire, Fire, Fire },
-                
-                { Fire, Water, Water, Empty, Water, Fire },
-                { Fire, Water, Fire, Empty, Empty, Fire },
-                { Fire, Water, Empty, Empty, Empty, Empty },
-                
-                { Fire, Water, Empty, Empty, Empty, Empty },
-                { Fire, Water, Empty, Empty, Empty, Empty },
-                { Fire, Water, Empty, Empty, Empty, Empty },
-            }),
-        };
 
-        public BlockFieldCreator(ILevelLoader levelLoader)
+        public BlockFieldCreator(IPlayerProgressService playerProgressService, ILevelLoader levelLoader)
         {
+            _playerProgressService = playerProgressService;
             _levelLoader = levelLoader;
         }
 
         public async Task<BlockField> CreateFieldAsync()
         {
-            return await _levelLoader.LoadLevelAsync(1);
+            return await _levelLoader.LoadLevelAsync(_playerProgressService.CurrentLevelIndex);
         }
-        
-        private static Block Block(string typeId)
-        {
-            return new Block(BlockType.Parse(typeId));
-        }
-        
-        private static Block Empty => Models.Block.Empty;
-        private static Block Water => Block("Water");
-        private static Block Fire => Block("Fire");
     }
 }
