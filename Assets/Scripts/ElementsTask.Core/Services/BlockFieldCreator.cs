@@ -53,7 +53,7 @@ namespace ElementsTask.Core.Services
         
         private static Block Block(string typeId)
         {
-            return new Block(new BlockType(typeId));
+            return new Block(BlockType.Parse(typeId));
         }
         
         private static Block Empty => Models.Block.Empty;

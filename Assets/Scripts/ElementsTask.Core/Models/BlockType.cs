@@ -1,4 +1,5 @@
 ﻿using System;
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 
 namespace ElementsTask.Core.Models
@@ -6,12 +7,24 @@ namespace ElementsTask.Core.Models
     [Serializable]
     public class BlockType : IEquatable<BlockType>
     {
+        public static readonly BlockType Empty = new BlockType("Empty");
+        
         [field:SerializeField]
         public string Id { get; private set; }
 
-        public BlockType(string id)
+        private BlockType(string id)
         {
             Id = id;
+        }
+
+        public static BlockType Parse(string id)
+        {
+            if (string.IsNullOrEmpty(id) || string.IsNullOrWhiteSpace(id))
+            {
+                return Empty;
+            }
+
+            return new BlockType(id);
         }
 
         public override bool Equals(object obj)

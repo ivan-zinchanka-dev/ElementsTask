@@ -4,8 +4,8 @@ namespace ElementsTask.Core.Models
 {
     public struct Block
     {
-        public static readonly BlockType EmptyType = new BlockType("Empty");
-        
+        public static Block Empty => new Block(BlockType.Empty);
+
         public BlockType Type { get; private set; }
         public BlockState State { get; set; }
 
@@ -14,7 +14,5 @@ namespace ElementsTask.Core.Models
             Type = type;
             State = BlockState.Idle;
         }
-
-        public static Block Empty => new Block(EmptyType);
     }
 }

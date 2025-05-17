@@ -22,7 +22,7 @@ namespace ElementsTask.Presentation.Views
         
         private Block _block;
 
-        public bool IsEmpty => _block.Type == Block.EmptyType;
+        public bool IsEmpty => _block.Type == BlockType.Empty;
         
         public BlockView SetModel(Block block)
         {
