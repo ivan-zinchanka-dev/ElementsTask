@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using ElementsTask.Common.Extensions;
 using ElementsTask.Core.Models;
@@ -28,12 +29,10 @@ namespace ElementsTask.Presentation.Views
         
         private BlocksMovingHandler _blocksMovingHandler;
         private BlocksFallingHandler _blocksFallingHandler;
-
         
-
-        public void Initialize()
+        public async Task InitializeAsync()
         {
-            BlockField fieldModel = _blockFieldCreator.Create();
+            BlockField fieldModel = await _blockFieldCreator.CreateFieldAsync();
             
             _size = new Vector2Int(fieldModel.Width, fieldModel.Height);
             _blocks = new List<BlockView>(_size.x * _size.y);
@@ -67,7 +66,7 @@ namespace ElementsTask.Presentation.Views
         public void ReInitialize()
         {
             Cleanup();
-            Initialize();
+            InitializeAsync();
         }
         
         public void Cleanup()

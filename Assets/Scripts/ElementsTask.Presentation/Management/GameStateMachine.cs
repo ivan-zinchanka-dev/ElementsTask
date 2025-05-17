@@ -16,9 +16,9 @@ namespace ElementsTask.Presentation.Management
             _blockFieldView.ReInitialize();
         }
         
-        private void Awake()
+        private async void Awake()
         {
-            _blockFieldView.Initialize();
+            await _blockFieldView.InitializeAsync();
         }
 
         private void OnDestroy()

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace ElementsTask.Core.Services
 {
-    public class CsvLevelsLoader
+    public class CsvLevelLoader : ILevelLoader
     {
         private static readonly Vector2Int LevelSize = new Vector2Int(6, 9);
         
@@ -31,7 +31,7 @@ namespace ElementsTask.Core.Services
         
         private string GetLevelResourceName(int levelIndex)
         {
-            return $"lvl_{levelIndex}";
+            return $"Levels/lvl_{levelIndex}";
         }
     }
 }

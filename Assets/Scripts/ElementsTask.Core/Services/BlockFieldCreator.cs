@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using ElementsTask.Core.Models;
 
 namespace ElementsTask.Core.Services
 {
     public class BlockFieldCreator
     {
+        private readonly ILevelLoader _levelLoader;
+        
         private readonly List<BlockField> _levels = new List<BlockField>()
         {
             new BlockField(new Block[,]
@@ -45,10 +48,15 @@ namespace ElementsTask.Core.Services
                 { Fire, Water, Empty, Empty, Empty, Empty },
             }),
         };
-        
-        public BlockField Create()
+
+        public BlockFieldCreator(ILevelLoader levelLoader)
         {
-            return _levels[1];
+            _levelLoader = levelLoader;
+        }
+
+        public async Task<BlockField> CreateFieldAsync()
+        {
+            return await _levelLoader.LoadLevelAsync(1);
         }
         
         private static Block Block(string typeId)

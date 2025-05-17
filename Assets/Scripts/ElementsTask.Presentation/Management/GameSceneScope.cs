@@ -20,9 +20,11 @@ namespace ElementsTask.Presentation.Management
         
         protected override void Configure(IContainerBuilder builder)
         {
+            builder.Register<ILevelLoader, CsvLevelLoader>(Lifetime.Singleton);
+            builder.Register<BlockFieldCreator>(Lifetime.Singleton);
+            
             builder.RegisterComponent<Camera>(_camera);
             builder.RegisterComponent<GameStateMachine>(_gameStateMachine);
-            builder.Register<BlockFieldCreator>(Lifetime.Singleton);
             builder.RegisterComponent<BlockViewsFactory>(_blockViewsFactory);
             builder.RegisterComponent<BlockFieldView>(_blockFieldView);
         }
