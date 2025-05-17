@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using ElementsTask.Common.Extensions;
@@ -8,7 +9,7 @@ using UnityEngine;
 
 namespace ElementsTask.Presentation.Services.BlockFieldHandlers
 {
-    public class BlocksFallingHandler
+    public class BlocksFallingHandler : IDisposable
     {
         private readonly Vector2Int _fieldSize;
         private readonly List<BlockView> _blocks;
@@ -109,6 +110,11 @@ namespace ElementsTask.Presentation.Services.BlockFieldHandlers
                 .Join(second.transform
                     .DOMove(firstData.WorldPosition, fallingDuration)
                     .SetEase(Ease.InQuart));
+        }
+
+        public void Dispose()
+        {
+            _fallingTween.Kill();
         }
     }
 }

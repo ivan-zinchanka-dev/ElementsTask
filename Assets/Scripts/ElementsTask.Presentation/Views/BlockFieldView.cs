@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using ElementsTask.Common.Extensions;
 using ElementsTask.Core.Models;
@@ -29,8 +28,10 @@ namespace ElementsTask.Presentation.Views
         
         private BlocksMovingHandler _blocksMovingHandler;
         private BlocksFallingHandler _blocksFallingHandler;
+
         
-        private void Awake()
+
+        public void Initialize()
         {
             BlockField fieldModel = _blockFieldCreator.Create();
             
@@ -53,19 +54,38 @@ namespace ElementsTask.Presentation.Views
                     currentSortingOrder++;
                 }
             }
-        }
-
-        private void Start()
-        {
+            
             _blocksMovingHandler = new BlocksMovingHandler(_size, _blocks);
             _blocksFallingHandler = new BlocksFallingHandler(_size, _blocks);
-        }
-
-        private void OnEnable()
-        {
+            
             foreach (BlockView block in _blocks)
             {
                 block.OnSelected.AddListener(OnBlockSelected);
+            }
+        }
+
+        public void ReInitialize()
+        {
+            Cleanup();
+            Initialize();
+        }
+        
+        public void Cleanup()
+        {
+            foreach (BlockView block in _blocks)
+            {
+                block.OnSelected.RemoveListener(OnBlockSelected);
+            }
+            
+            _blocksMovingHandler?.Dispose();
+            _blocksFallingHandler?.Dispose();
+
+            foreach (BlockView block in _blocks)
+            {
+                if (block != null)
+                {
+                    Destroy(block.gameObject);
+                }
             }
         }
 
@@ -98,19 +118,6 @@ namespace ElementsTask.Presentation.Views
                     }
                 });
             }
-        }
-        
-        private void OnDisable()
-        {
-            foreach (BlockView block in _blocks)
-            {
-                block.OnSelected.RemoveListener(OnBlockSelected);
-            }
-        }
-
-        private void OnDestroy()
-        {
-            _blocksMovingHandler.Dispose();
         }
     }
 }
