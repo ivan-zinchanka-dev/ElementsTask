@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using DG.Tweening;
 using ElementsTask.Common.Extensions;
 using ElementsTask.Core.Models;
 using ElementsTask.Core.Services;
-using ElementsTask.Presentation.Enums;
-using ElementsTask.Presentation.Models;
+using ElementsTask.Presentation.Services.BlockFieldHandlers;
 using ElementsTask.Presentation.Services.Factories;
 using UnityEngine;
 using VContainer;
@@ -24,6 +23,9 @@ namespace ElementsTask.Presentation.Views
         [Inject] 
         private BlockViewsFactory _blockViewsFactory;
 
+        
+        private BlocksMovingHandler _blocksMovingHandler;
+        
         private Vector2Int _size;
         private List<BlockView> _blocks;
         private BlockView _selectedBlock;
@@ -53,6 +55,11 @@ namespace ElementsTask.Presentation.Views
             }
         }
 
+        private void Start()
+        {
+            _blocksMovingHandler = new BlocksMovingHandler(_size, _blocks);
+        }
+
         private void OnEnable()
         {
             foreach (BlockView block in _blocks)
@@ -76,123 +83,27 @@ namespace ElementsTask.Presentation.Views
         private void OnBlockSelected(BlockView selectedBlock)
         {
             _selectedBlock = selectedBlock;
-            
-            //GameObject.CreatePrimitive(PrimitiveType.Quad).transform.position = _selectedBlock.transform.position;
         }
 
         private void Update()
         {
             if (IsPointerDownReceived(out Vector3 pointerPosition) && _selectedBlock != null)
             {
-                BlockView pair = GetSwapPair(_selectedBlock, 
-                    GetMovingDirection(pointerPosition - _selectedBlock.transform.position));
-
-                if (pair != null)
-                {
-                    SwapAsync(_selectedBlock, pair);
-                }
-
-                //GameObject.CreatePrimitive(PrimitiveType.Quad).transform.position = pointerPosition;
+                _blocksMovingHandler.TryMoveBlockAsync(_selectedBlock, pointerPosition).Forget();
             }
         }
-
-        private static BlockMovingDirection GetMovingDirection(Vector3 inputDirection)
-        {
-            if (Mathf.Abs(inputDirection.x) > Mathf.Abs(inputDirection.y))
-            {
-                return inputDirection.x > 0f ? BlockMovingDirection.Right : BlockMovingDirection.Left;
-            }
-            else
-            {
-                return inputDirection.y > 0f ? BlockMovingDirection.Up : BlockMovingDirection.Down;
-            }
-        }
-
-        private async UniTaskVoid SwapAsync(BlockView first, BlockView second)
-        {
-            const float swapDuration = 1.0f;
-            
-            BlockSwapData firstData = first.GetSwapData();
-            BlockSwapData secondData = second.GetSwapData();
-
-            await first.transform
-                .DOMove(secondData.WorldPosition, swapDuration)
-                .SetEase(Ease.Flash)
-                .SetLink(gameObject)
-                .ToUniTask();
-            
-            first
-                .SetGridPosition(secondData.GridPosition)
-                .SetSortingOrder(secondData.SortingOrder);
-            
-            await second.transform
-                .DOMove(firstData.WorldPosition, swapDuration)
-                .SetEase(Ease.Flash)
-                .SetLink(gameObject)
-                .ToUniTask();
-            
-            second
-                .SetGridPosition(firstData.GridPosition)
-                .SetSortingOrder(firstData.SortingOrder);
-        }
-
-
-        private BlockView GetSwapPair(BlockView origin, BlockMovingDirection swapDirection)
-        {
-            if (swapDirection == BlockMovingDirection.Up)
-            {
-                if (origin.GridPosition.y < _size.y - 1)
-                {
-                    return _blocks.Find(block => 
-                        block.GridPosition.x == origin.GridPosition.x && 
-                        block.GridPosition.y == origin.GridPosition.y + 1);
-                }
-
-                return null;
-            }
-            else if (swapDirection == BlockMovingDirection.Down)
-            {
-                if (origin.GridPosition.y > 0)
-                {
-                    return _blocks.Find(block => 
-                        block.GridPosition.x == origin.GridPosition.x && 
-                        block.GridPosition.y == origin.GridPosition.y - 1);
-                }
-
-                return null;
-            }
-            else if (swapDirection == BlockMovingDirection.Right)
-            {
-                if (origin.GridPosition.x < _size.x - 1)
-                {
-                    return _blocks.Find(block => 
-                        block.GridPosition.x == origin.GridPosition.x + 1 && 
-                        block.GridPosition.y == origin.GridPosition.y);
-                }
-
-                return null;
-            }
-            else if (swapDirection == BlockMovingDirection.Left)
-            {
-                if (origin.GridPosition.x > 0)
-                {
-                    return _blocks.Find(block => 
-                        block.GridPosition.x == origin.GridPosition.x - 1 && 
-                        block.GridPosition.y == origin.GridPosition.y);
-                }
-
-                return null;
-            }
-
-            return null;
-        }
-
+        
         private void OnDisable()
         {
             foreach (BlockView block in _blocks)
             {
                 block.OnSelected.RemoveListener(OnBlockSelected);
             }
+        }
+
+        private void OnDestroy()
+        {
+            _blocksMovingHandler.Dispose();
         }
     }
 }
