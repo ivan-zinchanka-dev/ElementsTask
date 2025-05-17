@@ -22,13 +22,13 @@ namespace ElementsTask.Presentation.Views
         private BlockFieldCreator _blockFieldCreator;
         [Inject] 
         private BlockViewsFactory _blockViewsFactory;
-
-        
-        private BlocksMovingHandler _blocksMovingHandler;
         
         private Vector2Int _size;
         private List<BlockView> _blocks;
         private BlockView _selectedBlock;
+        
+        private BlocksMovingHandler _blocksMovingHandler;
+        private BlocksFallingHandler _blocksFallingHandler;
         
         private void Awake()
         {
@@ -58,6 +58,7 @@ namespace ElementsTask.Presentation.Views
         private void Start()
         {
             _blocksMovingHandler = new BlocksMovingHandler(_size, _blocks);
+            _blocksFallingHandler = new BlocksFallingHandler(_size, _blocks);
         }
 
         private void OnEnable()
@@ -89,7 +90,13 @@ namespace ElementsTask.Presentation.Views
         {
             if (IsPointerDownReceived(out Vector3 pointerPosition) && _selectedBlock != null)
             {
-                _blocksMovingHandler.TryMoveBlockAsync(_selectedBlock, pointerPosition).Forget();
+                _blocksMovingHandler.TryMoveBlockAsync(_selectedBlock, pointerPosition).ContinueWith(moved =>
+                {
+                    if (moved)
+                    {
+                        _blocksFallingHandler.SimulateFallingAsync().Forget();
+                    }
+                });
             }
         }
         

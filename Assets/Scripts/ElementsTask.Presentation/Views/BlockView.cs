@@ -21,6 +21,8 @@ namespace ElementsTask.Presentation.Views
         public Vector2Int GridPosition => _gridPosition;
         
         private Block _block;
+
+        public bool IsEmpty => _block.Type == Block.EmptyType;
         
         public BlockView SetModel(Block block)
         {
