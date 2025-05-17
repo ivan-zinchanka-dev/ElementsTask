@@ -1,6 +1,7 @@
 ﻿using ElementsTask.Common.Extensions;
 using ElementsTask.Core.Models;
 using ElementsTask.Core.Services;
+using ElementsTask.Presentation.Enums;
 using ElementsTask.Presentation.Services.Factories;
 using UnityEngine;
 using VContainer;
@@ -68,17 +69,36 @@ namespace ElementsTask.Presentation.Views
         {
             _selectedBlock = selectedBlock;
             
-            GameObject.CreatePrimitive(PrimitiveType.Quad).transform.position = _selectedBlock.transform.position;
+            //GameObject.CreatePrimitive(PrimitiveType.Quad).transform.position = _selectedBlock.transform.position;
         }
 
         private void Update()
         {
             if (IsPointerDownReceived(out Vector3 pointerPosition) && _selectedBlock != null)
             {
-                GameObject.CreatePrimitive(PrimitiveType.Quad).transform.position = pointerPosition;
+                MoveBlock(_selectedBlock, GetMovingDirection(pointerPosition - _selectedBlock.transform.position));
+                
+                //GameObject.CreatePrimitive(PrimitiveType.Quad).transform.position = pointerPosition;
             }
         }
-        
+
+        private static BlockMovingDirection GetMovingDirection(Vector3 inputDirection)
+        {
+            if (Mathf.Abs(inputDirection.x) > Mathf.Abs(inputDirection.y))
+            {
+                return inputDirection.x > 0f ? BlockMovingDirection.Right : BlockMovingDirection.Left;
+            }
+            else
+            {
+                return inputDirection.y > 0f ? BlockMovingDirection.Up : BlockMovingDirection.Down;
+            }
+        }
+
+        private void MoveBlock(BlockView block, BlockMovingDirection direction)
+        {
+            Debug.Log("Direction: " + direction);
+        }
+
         private void OnDisable()
         {
             foreach (BlockView block in _blocks)
