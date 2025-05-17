@@ -1,4 +1,5 @@
-﻿using ElementsTask.Core.Models;
+﻿using ElementsTask.Common.Extensions;
+using ElementsTask.Core.Models;
 using ElementsTask.Core.Services;
 using ElementsTask.Presentation.Services.Factories;
 using UnityEngine;
@@ -10,7 +11,9 @@ namespace ElementsTask.Presentation.Views
     {
         [SerializeField] 
         private Services.Grid _grid;
-        
+     
+        [Inject]
+        private Camera _camera;
         [Inject]
         private BlockFieldCreator _blockFieldCreator;
         [Inject] 
@@ -53,7 +56,7 @@ namespace ElementsTask.Presentation.Views
         {
             if (Input.GetMouseButtonUp(0))
             {
-                pointerPosition = Input.mousePosition;
+                pointerPosition = _camera.ScreenToWorldPoint(Input.mousePosition).WithZ(0f);
                 return true;
             }
 
@@ -64,6 +67,8 @@ namespace ElementsTask.Presentation.Views
         private void OnBlockSelected(BlockView selectedBlock)
         {
             _selectedBlock = selectedBlock;
+            
+            GameObject.CreatePrimitive(PrimitiveType.Quad).transform.position = _selectedBlock.transform.position;
         }
 
         private void Update()

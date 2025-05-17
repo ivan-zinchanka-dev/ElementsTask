@@ -4,12 +4,13 @@ using ElementsTask.Presentation.Views;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
-using Grid = ElementsTask.Presentation.Services.Grid;
 
 namespace ElementsTask.Presentation.Management
 {
     public class GameSceneScope : LifetimeScope
     {
+        [SerializeField] 
+        private Camera _camera;
         [SerializeField] 
         private BlockViewsFactory _blockViewsFactory;
         [SerializeField]
@@ -19,6 +20,7 @@ namespace ElementsTask.Presentation.Management
         
         protected override void Configure(IContainerBuilder builder)
         {
+            builder.RegisterComponent<Camera>(_camera);
             builder.Register<BlockFieldCreator>(Lifetime.Singleton);
             builder.RegisterComponent<BlockViewsFactory>(_blockViewsFactory);
             builder.RegisterComponent<BlockFieldView>(_blockFieldView);

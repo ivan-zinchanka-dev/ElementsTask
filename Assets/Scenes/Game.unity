@@ -416,6 +416,7 @@ MonoBehaviour:
   - {fileID: 718714987}
   - {fileID: 412412614}
   - {fileID: 1496941452}
+  _camera: {fileID: 1873385848}
   _blockViewsFactory: {fileID: 412412616}
   _blockFieldView: {fileID: 1496941455}
   _gameSceneStartup: {fileID: 718714989}
