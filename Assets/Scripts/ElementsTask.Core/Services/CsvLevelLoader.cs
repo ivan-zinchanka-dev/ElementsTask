@@ -12,7 +12,19 @@ namespace ElementsTask.Core.Services
         
         public async Task<BlockField> LoadLevelAsync(int levelIndex)
         {
-            TextAsset levelCsv = Resources.Load<TextAsset>(GetLevelResourceName(levelIndex));
+            string levelName = GetLevelResourceName(levelIndex);
+            TextAsset levelCsv = Resources.Load<TextAsset>(levelName);
+
+            if (levelCsv != null)
+            {
+                Debug.Log($"File {levelName}.csv loaded");
+            }
+            else
+            {
+                Debug.LogWarning($"File {levelName}.csv not found");
+                return null;
+            }
+
             List<string[]> dataRows = await CsvReader.ReadDataRowsAsync(levelCsv.text);
             dataRows.Reverse();
             

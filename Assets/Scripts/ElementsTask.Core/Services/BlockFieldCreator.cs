@@ -16,7 +16,17 @@ namespace ElementsTask.Core.Services
 
         public async Task<BlockField> CreateFieldAsync()
         {
-            return await _levelLoader.LoadLevelAsync(_playerProgressService.CurrentLevelIndex);
+            BlockField field = await _levelLoader.LoadLevelAsync(_playerProgressService.CurrentLevelIndex);
+
+            if (field != null)
+            {
+                return field;
+            }
+            else
+            {
+                _playerProgressService.CurrentLevelIndex = 0;
+                return await _levelLoader.LoadLevelAsync(_playerProgressService.CurrentLevelIndex);
+            }
         }
     }
 }

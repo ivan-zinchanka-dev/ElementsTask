@@ -33,7 +33,13 @@ namespace ElementsTask.Presentation.Views
         public async Task InitializeAsync()
         {
             BlockField fieldModel = await _blockFieldCreator.CreateFieldAsync();
-            
+
+            if (fieldModel == null)
+            {
+                Debug.LogError("Field not loaded");
+                return;
+            }
+
             _size = new Vector2Int(fieldModel.Width, fieldModel.Height);
             _blocks = new List<BlockView>(_size.x * _size.y);
             int currentSortingOrder = 0;
@@ -63,27 +69,30 @@ namespace ElementsTask.Presentation.Views
             }
         }
 
-        public void ReInitialize()
+        public async Task ReInitialize()
         {
             Cleanup();
-            InitializeAsync();
+            await InitializeAsync();
         }
         
         public void Cleanup()
         {
-            foreach (BlockView block in _blocks)
-            {
-                block.OnSelected.RemoveListener(OnBlockSelected);
-            }
-            
             _blocksMovingHandler?.Dispose();
             _blocksFallingHandler?.Dispose();
 
-            foreach (BlockView block in _blocks)
+            if (_blocks != null)
             {
-                if (block != null)
+                foreach (BlockView block in _blocks)
                 {
-                    Destroy(block.gameObject);
+                    block.OnSelected.RemoveListener(OnBlockSelected);
+                }
+            
+                foreach (BlockView block in _blocks)
+                {
+                    if (block != null)
+                    {
+                        Destroy(block.gameObject);
+                    }
                 }
             }
         }
