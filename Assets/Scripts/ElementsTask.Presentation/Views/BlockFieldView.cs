@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using ElementsTask.Common.Extensions;
 using ElementsTask.Core.Models;
 using ElementsTask.Core.Services;
@@ -87,7 +89,7 @@ namespace ElementsTask.Presentation.Views
 
                 if (pair != null)
                 {
-                    Swap(_selectedBlock, pair);
+                    SwapAsync(_selectedBlock, pair);
                 }
 
                 //GameObject.CreatePrimitive(PrimitiveType.Quad).transform.position = pointerPosition;
@@ -106,17 +108,29 @@ namespace ElementsTask.Presentation.Views
             }
         }
 
-        private void Swap(BlockView first, BlockView second)
+        private async UniTaskVoid SwapAsync(BlockView first, BlockView second)
         {
+            const float swapDuration = 1.0f;
+            
             BlockSwapData firstData = first.GetSwapData();
             BlockSwapData secondData = second.GetSwapData();
 
-            first.transform.position = secondData.WorldPosition;
+            await first.transform
+                .DOMove(secondData.WorldPosition, swapDuration)
+                .SetEase(Ease.Flash)
+                .SetLink(gameObject)
+                .ToUniTask();
+            
             first
                 .SetGridPosition(secondData.GridPosition)
                 .SetSortingOrder(secondData.SortingOrder);
             
-            second.transform.position = firstData.WorldPosition;
+            await second.transform
+                .DOMove(firstData.WorldPosition, swapDuration)
+                .SetEase(Ease.Flash)
+                .SetLink(gameObject)
+                .ToUniTask();
+            
             second
                 .SetGridPosition(firstData.GridPosition)
                 .SetSortingOrder(firstData.SortingOrder);
