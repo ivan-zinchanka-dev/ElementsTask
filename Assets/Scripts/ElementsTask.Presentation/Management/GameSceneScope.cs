@@ -1,5 +1,6 @@
 ﻿using ElementsTask.Core.Services;
 using ElementsTask.Presentation.Services.Factories;
+using ElementsTask.Presentation.UI;
 using ElementsTask.Presentation.Views;
 using UnityEngine;
 using VContainer;
@@ -14,6 +15,8 @@ namespace ElementsTask.Presentation.Management
         [SerializeField]
         private GameStateMachine _gameStateMachine;
         [SerializeField] 
+        private HeadUpDisplay _headUpDisplay;
+        [SerializeField] 
         private BlockViewsFactory _blockViewsFactory;
         [SerializeField]
         private BlockFieldView _blockFieldView;
@@ -26,6 +29,7 @@ namespace ElementsTask.Presentation.Management
             
             builder.RegisterComponent<Camera>(_camera);
             builder.RegisterComponent<GameStateMachine>(_gameStateMachine);
+            builder.RegisterComponent<HeadUpDisplay>(_headUpDisplay);
             builder.RegisterComponent<BlockViewsFactory>(_blockViewsFactory);
             builder.RegisterComponent<BlockFieldView>(_blockFieldView);
         }

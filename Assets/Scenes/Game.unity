@@ -269,11 +269,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 298642051}
+  - component: {fileID: 298642052}
   - component: {fileID: 298642050}
   - component: {fileID: 298642049}
   - component: {fileID: 298642048}
   m_Layer: 5
-  m_Name: UI
+  m_Name: HUD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -355,13 +356,27 @@ RectTransform:
   - {fileID: 629222444}
   - {fileID: 1574301657}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &298642052
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 298642047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51181e75a65241a390318af41211529f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _restartButton: {fileID: 629222445}
+  _nextButton: {fileID: 1574301658}
 --- !u!1 &412412614
 GameObject:
   m_ObjectHideFlags: 0
@@ -665,7 +680,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -814,8 +829,10 @@ MonoBehaviour:
   - {fileID: 945397796}
   - {fileID: 412412614}
   - {fileID: 1496941452}
+  - {fileID: 298642047}
   _camera: {fileID: 1873385848}
   _gameStateMachine: {fileID: 945397797}
+  _headUpDisplay: {fileID: 298642052}
   _blockViewsFactory: {fileID: 412412616}
   _blockFieldView: {fileID: 1496941455}
 --- !u!4 &1479904744
@@ -832,7 +849,7 @@ Transform:
   m_Children:
   - {fileID: 412412615}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1496941452
 GameObject:
@@ -947,7 +964,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}

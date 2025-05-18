@@ -1,4 +1,5 @@
-﻿using ElementsTask.Core.Services;
+﻿using System.Threading.Tasks;
+using ElementsTask.Core.Services;
 using ElementsTask.Presentation.Views;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -15,16 +16,16 @@ namespace ElementsTask.Presentation.Management
         private BlockFieldView _blockFieldView;
 
         [Button]
-        private void Restart()
+        public async Task RestartAsync()
         {
-            _blockFieldView.ReInitialize();
+            await _blockFieldView.ReInitialize();
         }
 
         [Button]
-        private void Next()
+        public async Task NextAsync()
         {
             _progressService.CurrentLevelIndex++;
-            Restart();
+            await RestartAsync();
         }
 
         private async void Awake()
