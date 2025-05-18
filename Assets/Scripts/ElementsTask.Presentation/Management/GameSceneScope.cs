@@ -1,4 +1,5 @@
 ﻿using ElementsTask.Core.Services;
+using ElementsTask.Presentation.Balloons;
 using ElementsTask.Presentation.Services.Factories;
 using ElementsTask.Presentation.UI;
 using ElementsTask.Presentation.Views;
@@ -17,6 +18,8 @@ namespace ElementsTask.Presentation.Management
         [SerializeField] 
         private HeadUpDisplay _headUpDisplay;
         [SerializeField] 
+        private BalloonViewsFactory _balloonViewsFactory;
+        [SerializeField] 
         private BlockViewsFactory _blockViewsFactory;
         [SerializeField]
         private BlockFieldView _blockFieldView;
@@ -26,10 +29,12 @@ namespace ElementsTask.Presentation.Management
             builder.Register<IPlayerProgressService, PlayerProgressService>(Lifetime.Singleton);
             builder.Register<ILevelLoader, CsvLevelLoader>(Lifetime.Singleton);
             builder.Register<BlockFieldCreator>(Lifetime.Singleton);
+            builder.Register<BalloonsManager>(Lifetime.Transient);
             
             builder.RegisterComponent<Camera>(_camera);
             builder.RegisterComponent<GameStateMachine>(_gameStateMachine);
             builder.RegisterComponent<HeadUpDisplay>(_headUpDisplay);
+            builder.RegisterComponent<BalloonViewsFactory>(_balloonViewsFactory);
             builder.RegisterComponent<BlockViewsFactory>(_blockViewsFactory);
             builder.RegisterComponent<BlockFieldView>(_blockFieldView);
         }

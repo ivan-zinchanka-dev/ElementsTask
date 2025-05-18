@@ -1,5 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using ElementsTask.Core.Services;
+using ElementsTask.Presentation.Balloons;
 using ElementsTask.Presentation.Views;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -11,14 +14,24 @@ namespace ElementsTask.Presentation.Management
     {
         [Inject] 
         private IPlayerProgressService _progressService;
-        
         [Inject] 
         private BlockFieldView _blockFieldView;
-
+        [Inject] 
+        private BalloonsManager _balloonsManager;
+        
+        private CancellationTokenSource _balloonsStoppingTokenSource = new ();
+        
         [Button]
         public async Task RestartAsync()
         {
+            _balloonsStoppingTokenSource.Cancel();
+            _balloonsStoppingTokenSource.Dispose();
+            _balloonsManager.Dispose();
+            
             await _blockFieldView.ReInitialize();
+            
+            _balloonsStoppingTokenSource = new CancellationTokenSource();
+            _balloonsManager.StartAsync(transform, _balloonsStoppingTokenSource.Token).Forget();
         }
 
         [Button]
@@ -31,10 +44,15 @@ namespace ElementsTask.Presentation.Management
         private async void Awake()
         {
             await _blockFieldView.InitializeAsync();
+
+            _balloonsManager.StartAsync(transform, _balloonsStoppingTokenSource.Token).Forget();
         }
 
         private void OnDestroy()
         {
+            _balloonsStoppingTokenSource.Cancel();
+            _balloonsStoppingTokenSource.Dispose();
+            
             _blockFieldView.Cleanup();
         }
     }
