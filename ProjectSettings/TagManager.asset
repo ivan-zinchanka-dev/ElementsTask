@@ -47,3 +47,6 @@ TagManager:
   - name: Blocks
     uniqueID: 583565675
     locked: 0
+  - name: UI
+    uniqueID: 362150851
+    locked: 0
