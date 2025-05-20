@@ -6,13 +6,15 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using Random = UnityEngine.Random;
 
 namespace ElementsTask.Presentation.BlockFieldCore.Views
 {
     public class BlockView : MonoBehaviour, IPointerDownHandler
     {
         private static readonly int StateParam = Animator.StringToHash("BlockState");
-
+        private static readonly int IdleStateHash = Animator.StringToHash("Idle");
+        
         [SerializeField] 
         private SpriteRenderer _spriteRenderer;
         [SerializeField]
@@ -48,17 +50,21 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
             return this;
         }
 
+        public BlockView RandomizeIdleAnimation()
+        {
+            if (_block.State == BlockState.Idle)
+            {
+                _animator.Play(IdleStateHash, 0, Random.Range(0f, 1f));
+            }
+            
+            return this;
+        }
+
         public void OnPointerDown(PointerEventData eventData)
         {
             OnSelected?.Invoke(this);
         }
-
-        private void SwitchState(BlockState newState)
-        {
-            _block.State = newState;
-            _animator.SetInteger(StateParam, (int)newState);
-        }
-
+        
         public void OnFall()
         {
             SwitchState(BlockState.Fall);
@@ -82,6 +88,12 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
             Destroy(gameObject);
             
             await UniTask.Yield(PlayerLoopTiming.Update);
+        }
+        
+        private void SwitchState(BlockState newState)
+        {
+            _block.State = newState;
+            _animator.SetInteger(StateParam, (int)newState);
         }
     }
 }

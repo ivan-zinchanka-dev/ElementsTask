@@ -63,7 +63,8 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
                         BlockView createdBlock = _blockViewsFactory
                             .CreateBlockView(blockType, cell.Transform)
                             .SetModel(block)
-                            .SetSortingOrder(_cachedSortingOrders.GetSortingOrder(x, y));
+                            .SetSortingOrder(_cachedSortingOrders.GetSortingOrder(x, y))
+                            .RandomizeIdleAnimation();
 
                         cell.Content = createdBlock;
                     }
@@ -155,10 +156,10 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
                     if (moved)
                     {
                         _blocksFallingHandler.SimulateFallingAsync().Forget();
-                        /*_blocksDestructionHandler.SimulateDestructionAsync().ContinueWith(() =>
+                        _blocksDestructionHandler.SimulateDestructionAsync().ContinueWith(() =>
                         {
                             _blocksFallingHandler.SimulateFallingAsync().Forget();
-                        });*/
+                        });
                     }
                 });
                 
