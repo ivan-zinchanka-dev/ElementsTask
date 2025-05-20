@@ -26,26 +26,7 @@ namespace ElementsTask.Presentation.Services.BlockFieldHandlers
             _blocks = blocks;
             _fallingSpeed = fallingSpeed;
         }
-
-        public async UniTask SimulateFallingAsync()
-        {
-            if (_fallingTween.IsActive())
-            {
-                return;
-            }
-
-            Dictionary<BlockView, BlockView> swapPairs = GetSwapPairs();
-
-            _fallingTween = DOTween.Sequence();
-
-            foreach (var pair in swapPairs)
-            {
-                _fallingTween.Join(BeginSwap(pair.Key, pair.Value));
-            }
-
-            await _fallingTween.ToUniTask();
-        }
-
+        
 
         public async UniTask StartFallingAsync()
         {
@@ -55,6 +36,17 @@ namespace ElementsTask.Presentation.Services.BlockFieldHandlers
             }
             
             _fallingTween = DOTween.Sequence();
+            
+            while (TrySimulateFalling(_fallingTween))
+            {
+                await _fallingTween.ToUniTask();
+            }
+            
+        }
+
+        private bool TrySimulateFalling(Sequence fallingTween)
+        {
+            bool needSimulation = false;
             
             foreach (BlockView block in _blocks)
             {
@@ -74,43 +66,15 @@ namespace ElementsTask.Presentation.Services.BlockFieldHandlers
                             bv.transform.localScale *= 0.75f;
                         }*/
                         
-                        _fallingTween
+                        fallingTween
                             .Join(Fall(bottom, column));
-                    }
-                }
-            }
-
-            await _fallingTween.ToUniTask();
-        }
-
-
-        private Dictionary<BlockView, BlockView> GetSwapPairs()
-        {
-            var swapPairs = new Dictionary<BlockView, BlockView>();
-            
-            foreach (BlockView block in _blocks)
-            {
-                if (!block.IsEmpty && block.GridPosition.y > 0)
-                {
-                    if (IsFloatingBlock(block, out BlockView bottom))
-                    {
-                        //swapPairs.Add(block, bottom);
-                        //float fallDistance = block.GridPosition.y - bottom.GridPosition.y;
                         
-                         List<BlockView> column = _blocks
-                            .Where(other => !other.IsEmpty && other.GridPosition.x == block.GridPosition.x)
-                            .OrderBy(other =>other.GridPosition.y)
-                            .ToList();
-                         
-                         
+                        needSimulation = true;
                     }
-
-                    
-
                 }
             }
 
-            return swapPairs;
+            return needSimulation;
         }
         
         private bool IsFloatingBlock(BlockView origin, out BlockView bottom)
@@ -141,33 +105,6 @@ namespace ElementsTask.Presentation.Services.BlockFieldHandlers
             }
             
             return fallingTween;
-        }
-
-
-        //TODO Unify
-        private Tween BeginSwap(BlockView first, BlockView second)
-        {
-            BlockSwapData firstData = first.GetSwapData();
-            BlockSwapData secondData = second.GetSwapData();
-            
-            first
-                .SetGridPosition(secondData.GridPosition)
-                .SetSortingOrder(secondData.SortingOrder);
-            
-            second
-                .SetGridPosition(firstData.GridPosition)
-                .SetSortingOrder(firstData.SortingOrder);
-
-            float fallingDistance = Vector3.Distance(first.transform.position, second.transform.position);
-            float fallingDuration = fallingDistance / _fallingSpeed;
-
-            return DOTween.Sequence()
-                .Append(first.transform
-                    .DOMove(secondData.WorldPosition, fallingDuration)
-                    .SetEase(Ease.InQuart))
-                .Join(second.transform
-                    .DOMove(firstData.WorldPosition, fallingDuration)
-                    .SetEase(Ease.InQuart));
         }
 
         public void Dispose()
