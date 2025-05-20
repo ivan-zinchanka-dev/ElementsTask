@@ -4,6 +4,7 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using ElementsTask.Common.Extensions;
+using ElementsTask.Presentation.BlockFieldCore.Models;
 using ElementsTask.Presentation.BlockFieldCore.Views;
 using ElementsTask.Presentation.Components.Grid;
 using UnityEngine;
@@ -12,19 +13,17 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
 {
     public class BlocksFallingHandler : IDisposable
     {
+        private readonly BlockFieldViewOptions _viewOptions;
         private readonly BlockFieldViewGrid _grid;
-        private readonly float _fallingSpeed;
         
         private Sequence _fallingTween;
-        
-        public BlocksFallingHandler(BlockFieldViewGrid grid, 
-            float fallingSpeed = 3f)
+
+        public BlocksFallingHandler(BlockFieldViewOptions viewOptions, BlockFieldViewGrid grid)
         {
+            _viewOptions = viewOptions;
             _grid = grid;
-            _fallingSpeed = fallingSpeed;
         }
         
-
         public async UniTask StartFallingAsync()
         {
             if (_fallingTween.IsActive())
@@ -96,7 +95,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
                 targetCell.Content.SortingOrder -= _grid.Width;
                 
                 fallingTween.Join(
-                    targetCell.Content.transform.DOMove(targetCell.Transform.position, 0.15f)
+                    targetCell.Content.transform.DOMove(targetCell.Transform.position, _viewOptions.FallingSpeed)
                         .SetEase(Ease.Linear));
             }
             

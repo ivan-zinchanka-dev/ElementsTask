@@ -10,17 +10,17 @@ using UnityEngine;
 
 namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
 {
-    public class BlocksMovingHandler : IDisposable
+    public class BlocksSwappingHandler : IDisposable
     {
-        private readonly Grid<BlockView> _grid;
-        private readonly float _movingDuration;
+        private readonly BlockFieldViewOptions _viewOptions;
+        private readonly BlockFieldViewGrid _grid;
         
         private Tween _movingTween;
         
-        public BlocksMovingHandler(Grid<BlockView> grid, float movingDuration = 0.15f)
+        public BlocksSwappingHandler(BlockFieldViewOptions viewOptions, BlockFieldViewGrid grid)
         {
+            _viewOptions = viewOptions;
             _grid = grid;
-            _movingDuration = movingDuration;
         }
         
         public async UniTask<bool> TryMoveBlockAsync(GridCell<BlockView> selectedCell, Vector3 targetPosition)
@@ -120,10 +120,10 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
             
             return DOTween.Sequence()
                 .Append(first.transform
-                    .DOMove(secondData.WorldPosition, _movingDuration)
+                    .DOMove(secondData.WorldPosition, _viewOptions.SwappingDuration)
                     .SetEase(Ease.Flash))
                 .Join(second.transform
-                    .DOMove(firstData.WorldPosition, _movingDuration)
+                    .DOMove(firstData.WorldPosition, _viewOptions.SwappingDuration)
                     .SetEase(Ease.Flash));
         }
 

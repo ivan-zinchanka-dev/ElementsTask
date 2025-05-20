@@ -4,16 +4,20 @@ using Cysharp.Threading.Tasks;
 using ElementsTask.Common.Extensions;
 using ElementsTask.Core.Models;
 using ElementsTask.Core.Services;
+using ElementsTask.Presentation.BlockFieldCore.Models;
 using ElementsTask.Presentation.BlockFieldCore.Services.Factories;
 using ElementsTask.Presentation.BlockFieldCore.Services.Handlers;
 using ElementsTask.Presentation.Components.Grid;
 using UnityEngine;
 using VContainer;
+using VContainer.Unity;
 
 namespace ElementsTask.Presentation.BlockFieldCore.Views
 {
     public class BlockFieldView : MonoBehaviour
     {
+        [SerializeField]
+        private BlockFieldViewOptions _options;
         [SerializeField] 
         private BlockFieldViewGrid _grid;
      
@@ -25,8 +29,9 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
         private BlockViewsFactory _blockViewsFactory;
         
         private GridCell<BlockView> _selectedCell;
+        private IObjectResolver _selfDiContainer;
         
-        private BlocksMovingHandler _blocksMovingHandler;
+        private BlocksSwappingHandler _blocksSwappingHandler;
         private BlocksFallingHandler _blocksFallingHandler;
         
         public async Task InitializeAsync()
@@ -52,14 +57,20 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
                         .SetSortingOrder(currentSortingOrder);
 
                     cell.Content = createdBlock;
-                    
-                    //_blocks.Add(createdBlock);
                     currentSortingOrder++;
                 }
             }
+
+            var diBuilder = new ContainerBuilder();
+            diBuilder.RegisterComponent<BlockFieldViewGrid>(_grid);
+            diBuilder.RegisterInstance<BlockFieldViewOptions>(_options);
+            diBuilder.Register<BlocksSwappingHandler>(Lifetime.Transient);
+            diBuilder.Register<BlocksFallingHandler>(Lifetime.Transient);
+
+            _selfDiContainer = diBuilder.Build();
             
-            _blocksMovingHandler = new BlocksMovingHandler(_grid);
-            _blocksFallingHandler = new BlocksFallingHandler(_grid);
+            _blocksSwappingHandler = _selfDiContainer.Resolve<BlocksSwappingHandler>();
+            _blocksFallingHandler = _selfDiContainer.Resolve<BlocksFallingHandler>();;
             
             foreach (GridCell<BlockView> cell in _grid)
             {
@@ -75,8 +86,10 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
         
         public void Cleanup()
         {
-            _blocksMovingHandler?.Dispose();
+            _blocksSwappingHandler?.Dispose();
             _blocksFallingHandler?.Dispose();
+            
+            _selfDiContainer.Dispose();
             
             foreach (GridCell<BlockView> cell in _grid)
             {
@@ -111,7 +124,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
             {
                 Debug.Log("TryMoveBlockAsync");
                 
-                _blocksMovingHandler.TryMoveBlockAsync(_selectedCell, pointerPosition).ContinueWith(moved =>
+                _blocksSwappingHandler.TryMoveBlockAsync(_selectedCell, pointerPosition).ContinueWith(moved =>
                 {
                     if (moved)
                     {
@@ -121,10 +134,6 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
                 
                 _selectedCell = null;
             }
-            /*else
-            {
-                _selectedBlock = null;
-            }*/
         }
     }
 }

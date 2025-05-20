@@ -911,6 +911,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90df7b0ce6a64187a45d22f7ad6ff32b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _options:
+    <SwappingDuration>k__BackingField: 0.15
+    <FallingSpeed>k__BackingField: 0.15
   _grid: {fileID: 1496941456}
 --- !u!114 &1496941456
 MonoBehaviour:
