@@ -9,6 +9,7 @@ namespace ElementsTask.Presentation.Components.Grid
         public Vector2Int Position { get; set; }
         
         public bool HasContent => Content != null; 
+        public bool IsEmpty => Content == null;
 
         public GridCell(Transform transform, Vector2Int position, TContent content = null)
         {

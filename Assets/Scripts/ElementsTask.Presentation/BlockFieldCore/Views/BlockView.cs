@@ -33,7 +33,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
         }
         
         public BlockType Type => _block.Type;
-        public bool IsEmpty => Type == BlockType.Empty;
+        //public bool IsEmpty => Type == BlockType.Empty;
         
         public BlockView SetModel(Block block)
         {

@@ -46,7 +46,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
             
             foreach (GridCell<BlockView> currentCell in _grid)
             {
-                if ( currentCell.Content  != null && !currentCell.Content.IsEmpty && currentCell.Position.y > 0)
+                if (currentCell.HasContent && currentCell.Position.y > 0)
                 {
                     if (IsFloatingBlock(currentCell, out GridCell<BlockView> bottom))
                     {
@@ -73,16 +73,13 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
         {
             Vector2Int targetPosition = origin.Position.WithY(origin.Position.y - 1);
             bottom = _grid.GetCell(targetPosition);
-            return bottom.Content.IsEmpty;
+            return bottom.IsEmpty;
         }
 
         private Sequence Fall(GridCell<BlockView> emptyBottomCell, List<GridCell<BlockView>> blockColumn)
         {
             Vector2Int topPosition = new Vector2Int(emptyBottomCell.Position.x, emptyBottomCell.Position.y + blockColumn.Count);
             GridCell<BlockView> topCell = _grid.GetCell(topPosition);
-
-            BlockView emptyBottom = emptyBottomCell.Content;
-            emptyBottom.transform.position = topCell.Transform.position;
             
             Sequence fallingTween = DOTween.Sequence();
             
@@ -99,7 +96,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
                         .SetEase(Ease.Linear));
             }
             
-            topCell.Content = emptyBottom;
+            topCell.Content = null;
             
             return fallingTween;
         }

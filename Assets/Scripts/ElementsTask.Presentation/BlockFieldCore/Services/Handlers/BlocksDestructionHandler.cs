@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using DG.Tweening;
 using ElementsTask.Core.Models;
-using ElementsTask.Presentation.BlockFieldCore.Extensions;
 using ElementsTask.Presentation.BlockFieldCore.Views;
 using ElementsTask.Presentation.Components.Grid;
 using UnityEngine;
@@ -83,7 +81,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
                 BlockView currentBlock = getBlock(i);
                 BlockView previousBlock = getBlock(i - 1);
 
-                if (!currentBlock.IsNullOrEmpty() && !previousBlock.IsNullOrEmpty() && currentBlock.Type == previousBlock.Type)
+                if (currentBlock != null && previousBlock != null && currentBlock.Type == previousBlock.Type)
                 {
                     matchCells++;
                 }
@@ -162,7 +160,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
 
         private static bool HasBlockType(GridCell<BlockView> cell, BlockType blockType)
         {
-            return cell != null && !cell.Content.IsNullOrEmpty() && cell.Content.Type == blockType;
+            return cell != null && cell.HasContent && cell.Content.Type == blockType;
         }
 
         public void Dispose()

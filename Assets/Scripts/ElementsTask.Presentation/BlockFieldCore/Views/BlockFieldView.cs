@@ -53,12 +53,24 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
                 for (int x = 0; x < fieldModel.Width; x++)
                 {
                     GridCell<BlockView> cell = _grid.GetCell(x, y);
-                    BlockView createdBlock = _blockViewsFactory
-                        .CreateBlockView(fieldModel.GetBlock(x, y).Type, cell.Transform)
-                        .SetModel(fieldModel.GetBlock(x, y))
-                        .SetSortingOrder(currentSortingOrder);
+                    
+                    Block block = fieldModel.GetBlock(x, y);
+                    BlockType blockType = block.Type;
 
-                    cell.Content = createdBlock;
+                    if (blockType != BlockType.Empty)
+                    {
+                        BlockView createdBlock = _blockViewsFactory
+                            .CreateBlockView(blockType, cell.Transform)
+                            .SetModel(block)
+                            .SetSortingOrder(currentSortingOrder);
+
+                        cell.Content = createdBlock;
+                    }
+                    else
+                    {
+                        cell.Content = null;
+                    }
+                    
                     currentSortingOrder++;
                 }
             }

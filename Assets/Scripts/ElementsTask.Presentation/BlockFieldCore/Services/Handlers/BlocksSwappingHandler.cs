@@ -59,7 +59,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
             if (origin.Position.y < _grid.Height - 1)
             {
                 GridCell<BlockView> upCell = _grid.GetCell(origin.Position.WithY(origin.Position.y + 1));
-                return upCell.Content != null && !upCell.Content.IsEmpty;
+                return upCell.HasContent;
             }
 
             return false;
@@ -106,17 +106,32 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
         private Tween BeginSwap(GridCell<BlockView> firstCell, GridCell<BlockView> secondCell)
         {
             (firstCell.Content, secondCell.Content) = (secondCell.Content, firstCell.Content);
-            return BeginSwap(firstCell.Content, secondCell.Content);
+
+            Sequence swappingSequence = DOTween.Sequence();
+            
+            if (firstCell.HasContent)
+            {
+                swappingSequence
+                    .Join(firstCell.Content.transform
+                    .DOMove(firstCell.Transform.position, _viewOptions.SwappingDuration)
+                    .SetEase(Ease.Flash));
+            }
+
+            if (secondCell.HasContent)
+            {
+                swappingSequence
+                    .Join(secondCell.Content.transform
+                        .DOMove(secondCell.Transform.position, _viewOptions.SwappingDuration)
+                        .SetEase(Ease.Flash));
+            }
+
+            return swappingSequence;
         }
         
-        private Tween BeginSwap(BlockView first, BlockView second)
+        /*private Tween BeginSwap(BlockView first, BlockView second)
         {
             BlockSwapData firstData = first.GetSwapData();
             BlockSwapData secondData = second.GetSwapData();
-            
-            first.SetSortingOrder(secondData.SortingOrder);
-            
-            second.SetSortingOrder(firstData.SortingOrder);
             
             return DOTween.Sequence()
                 .Append(first.transform
@@ -125,7 +140,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
                 .Join(second.transform
                     .DOMove(firstData.WorldPosition, _viewOptions.SwappingDuration)
                     .SetEase(Ease.Flash));
-        }
+        }*/
 
         public void Dispose()
         {
