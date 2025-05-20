@@ -26,7 +26,8 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
             set => _spriteRenderer.sortingOrder = value;
         }
         
-        public bool IsEmpty => _block.Type == BlockType.Empty;
+        public BlockType Type => _block.Type;
+        public bool IsEmpty => Type == BlockType.Empty;
         
         public BlockView SetModel(Block block)
         {
@@ -49,5 +50,23 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
         {
             return new BlockSwapData(transform.position, _spriteRenderer.sortingOrder);
         }
+        
+        /*public override bool Equals(object obj)
+        {
+            return Equals(obj as BlockView);
+        }
+
+        public bool Equals(BlockView other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+
+            return _block.Type == other._block.Type;
+        }
+
+        public override int GetHashCode()
+        {
+            return _block.Type.GetHashCode();
+        }*/
     }
 }

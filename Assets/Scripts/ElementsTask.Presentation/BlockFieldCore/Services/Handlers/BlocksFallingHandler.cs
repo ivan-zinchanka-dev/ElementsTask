@@ -24,7 +24,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
             _grid = grid;
         }
         
-        public async UniTask StartFallingAsync()
+        public async UniTask SimulateFallingAsync()
         {
             if (_fallingTween.IsActive())
             {

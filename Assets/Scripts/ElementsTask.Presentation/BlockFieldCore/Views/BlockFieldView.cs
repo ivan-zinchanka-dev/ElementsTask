@@ -8,6 +8,7 @@ using ElementsTask.Presentation.BlockFieldCore.Models;
 using ElementsTask.Presentation.BlockFieldCore.Services.Factories;
 using ElementsTask.Presentation.BlockFieldCore.Services.Handlers;
 using ElementsTask.Presentation.Components.Grid;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -33,6 +34,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
         
         private BlocksSwappingHandler _blocksSwappingHandler;
         private BlocksFallingHandler _blocksFallingHandler;
+        private BlocksDestructionHandler _blocksDestructionHandler;
         
         public async Task InitializeAsync()
         {
@@ -66,16 +68,24 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
             diBuilder.RegisterInstance<BlockFieldViewOptions>(_options);
             diBuilder.Register<BlocksSwappingHandler>(Lifetime.Transient);
             diBuilder.Register<BlocksFallingHandler>(Lifetime.Transient);
-
+            diBuilder.Register<BlocksDestructionHandler>(Lifetime.Transient);
+            
             _selfDiContainer = diBuilder.Build();
             
             _blocksSwappingHandler = _selfDiContainer.Resolve<BlocksSwappingHandler>();
-            _blocksFallingHandler = _selfDiContainer.Resolve<BlocksFallingHandler>();;
+            _blocksFallingHandler = _selfDiContainer.Resolve<BlocksFallingHandler>();
+            _blocksDestructionHandler = _selfDiContainer.Resolve<BlocksDestructionHandler>();
             
             foreach (GridCell<BlockView> cell in _grid)
             {
                 cell.Content?.OnSelected.AddListener(OnBlockSelected);
             }
+        }
+
+        [Button]
+        private void FindToDestroy()
+        {
+            _blocksDestructionHandler.SimulateDestructionAsync().Forget();
         }
 
         public async Task ReInitialize()
@@ -128,7 +138,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
                 {
                     if (moved)
                     {
-                        _blocksFallingHandler.StartFallingAsync().Forget();
+                        _blocksFallingHandler.SimulateFallingAsync().Forget();
                     }
                 });
                 
