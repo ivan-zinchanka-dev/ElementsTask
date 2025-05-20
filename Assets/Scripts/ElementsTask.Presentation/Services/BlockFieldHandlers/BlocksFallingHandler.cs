@@ -40,8 +40,8 @@ namespace ElementsTask.Presentation.Services.BlockFieldHandlers
             while (TrySimulateFalling(_fallingTween))
             {
                 await _fallingTween.ToUniTask();
+                _fallingTween = DOTween.Sequence();
             }
-            
         }
 
         private bool TrySimulateFalling(Sequence fallingTween)
@@ -60,11 +60,6 @@ namespace ElementsTask.Presentation.Services.BlockFieldHandlers
                                 other.GridPosition.y >= block.GridPosition.y)
                             .OrderBy(other =>other.GridPosition.y)
                             .ToList();
-
-                        /*foreach (var bv in column)
-                        {
-                            bv.transform.localScale *= 0.75f;
-                        }*/
                         
                         fallingTween
                             .Join(Fall(bottom, column));
