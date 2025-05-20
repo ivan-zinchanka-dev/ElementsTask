@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using ElementsTask.Core.Models;
+using ElementsTask.Presentation.BlockFieldCore.Extensions;
 using ElementsTask.Presentation.BlockFieldCore.Views;
 using ElementsTask.Presentation.Components.Grid;
 using UnityEngine;
@@ -10,14 +12,11 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
 {
     public class BlocksDestructionHandler : IDisposable
     {
-        private readonly BlockFieldViewGrid _grid;
-        
-        private Sequence _destructionTween;
-
         private const int TargetMatchCells = 3;
-        
         private static readonly Vector2Int[] Directions =
             { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+        
+        private readonly BlockFieldViewGrid _grid;
         
         public BlocksDestructionHandler(BlockFieldViewGrid grid)
         {
@@ -26,37 +25,26 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
         
         public async UniTask SimulateDestructionAsync()
         {
-            if (_destructionTween.IsActive())
-            {
-                return;
-            }
+            var destructionTasks = new List<UniTask>();
             
-            _destructionTween = DOTween.Sequence();
+            List<HashSet<Vector2Int>> regions = FindRegionsIncludingMatches(_grid, FindMatchLineCells(_grid));
 
-            TrySimulateDestruction();
-        }
-
-        private bool TrySimulateDestruction()
-        {
-            bool needSimulation = false;
-
-            var regions = FindRegionsIncludingMatches(_grid, FindMatchLineCells(_grid));
-
-            foreach (var region in regions)
+            foreach (HashSet<Vector2Int> region in regions)
             {
-                foreach (var position in region)
+                foreach (Vector2Int cellPosition in region)
                 { 
-                    var c = _grid.GetCell(position).Content;
+                    BlockView block = _grid.GetCell(cellPosition).Content;
 
-                    if (c != null)
+                    if (block != null)
                     {
-                        c.transform.localScale *= 0.85f;
+                        destructionTasks.Add(block.SelfDestroyAsync());
                     }
                 }
             }
 
-            return needSimulation;
+            await UniTask.WhenAll(destructionTasks);
         }
+        
         
         private HashSet<Vector2Int> FindMatchLineCells(BlockFieldViewGrid grid)
         {
@@ -92,10 +80,10 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
             int matchCells = 1;
             for (int i = 1; i < length; i++)
             {
-                BlockView curr = getBlock(i);
-                BlockView prev = getBlock(i - 1);
+                BlockView currentBlock = getBlock(i);
+                BlockView previousBlock = getBlock(i - 1);
 
-                if (curr != null && prev != null && curr.Type == prev.Type)
+                if (!currentBlock.IsNullOrEmpty() && !previousBlock.IsNullOrEmpty() && currentBlock.Type == previousBlock.Type)
                 {
                     matchCells++;
                 }
@@ -158,8 +146,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
                         if (nx >= 0 && nx < grid.Width &&
                             ny >= 0 && ny < grid.Height &&
                             !visited[ny, nx] &&
-                            grid.GetCell(nx, ny)?.Content != null &&
-                            grid.GetCell(nx, ny).Content.Type == block.Type)
+                            HasBlockType(grid.GetCell(nx, ny), block.Type))
                         {
                             queue.Enqueue(new Vector2Int(nx, ny));
                             visited[ny, nx] = true;
@@ -172,10 +159,15 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
 
             return result;
         }
-        
+
+        private static bool HasBlockType(GridCell<BlockView> cell, BlockType blockType)
+        {
+            return cell != null && !cell.Content.IsNullOrEmpty() && cell.Content.Type == blockType;
+        }
+
         public void Dispose()
         {
-            _destructionTween.Kill();
+            //_destructionTween.Kill();
         }
     }
 }

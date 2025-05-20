@@ -7,6 +7,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4697112116312477777, guid: b89a70523ead4104d87c33241c71db1f, type: 3}
+      propertyPath: _destroyAnimClip
+      value: 
+      objectReference: {fileID: 7400000, guid: 310bffea0c9e709428269aabc8250acf, type: 2}
     - target: {fileID: 6564995860624937960, guid: b89a70523ead4104d87c33241c71db1f, type: 3}
       propertyPath: m_RootOrder
       value: 0

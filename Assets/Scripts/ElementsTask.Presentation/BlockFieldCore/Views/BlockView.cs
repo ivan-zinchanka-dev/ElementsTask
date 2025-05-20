@@ -1,4 +1,7 @@
-﻿using ElementsTask.Core.Models;
+﻿using System;
+using Cysharp.Threading.Tasks;
+using ElementsTask.Core.Enums;
+using ElementsTask.Core.Models;
 using ElementsTask.Presentation.BlockFieldCore.Models;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -9,11 +12,14 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
 {
     public class BlockView : MonoBehaviour, IPointerDownHandler
     {
+        private static readonly int StateParam = Animator.StringToHash("BlockState");
+
         [SerializeField] 
         private SpriteRenderer _spriteRenderer;
-
-        [ShowInInspector] 
-        private Vector2Int _gridPosition;
+        [SerializeField]
+        private Animator _animator;
+        [SerializeField] 
+        private AnimationClip _destroyAnimClip;
         
         [field:SerializeField] 
         public UnityEvent<BlockView> OnSelected { get; private set; }
@@ -32,6 +38,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
         public BlockView SetModel(Block block)
         {
             _block = block;
+            _block.State = BlockState.Idle;
             return this;
         }
         
@@ -50,23 +57,23 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
         {
             return new BlockSwapData(transform.position, _spriteRenderer.sortingOrder);
         }
-        
-        /*public override bool Equals(object obj)
+
+        private void SwitchState(BlockState newState)
         {
-            return Equals(obj as BlockView);
+            _block.State = newState;
+            _animator.SetInteger(StateParam, (int)newState);
         }
 
-        public bool Equals(BlockView other)
+        public async UniTask SelfDestroyAsync()
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-
-            return _block.Type == other._block.Type;
+            SwitchState(BlockState.Destroy);
+            
+            if (_destroyAnimClip != null)
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(_destroyAnimClip.length), DelayType.DeltaTime);
+            }
+            
+            _spriteRenderer.color = Color.clear;
         }
-
-        public override int GetHashCode()
-        {
-            return _block.Type.GetHashCode();
-        }*/
     }
 }
