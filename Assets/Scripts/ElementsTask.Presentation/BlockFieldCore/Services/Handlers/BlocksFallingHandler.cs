@@ -38,14 +38,14 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
             
             _fallingTween = DOTween.Sequence();
             
-            while (TrySimulateFalling(_fallingTween))
+            while (TrySimulateFalling())
             {
                 await _fallingTween.ToUniTask();
                 _fallingTween = DOTween.Sequence();
             }
         }
 
-        private bool TrySimulateFalling(Sequence fallingTween)
+        private bool TrySimulateFalling()
         {
             bool needSimulation = false;
             
@@ -63,8 +63,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
                             .OrderBy(otherCell => otherCell.Position.y)
                             .ToList();
                         
-                        fallingTween
-                            .Join(Fall(bottom, column));
+                        _fallingTween.Join(Fall(bottom, column));
                         
                         needSimulation = true;
                     }
@@ -86,7 +85,8 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
             Vector2Int topPosition = new Vector2Int(emptyBottomCell.Position.x, emptyBottomCell.Position.y + blockColumn.Count);
             GridCell<BlockView> topCell = _grid.GetCell(topPosition);
             
-            Sequence fallingTween = DOTween.Sequence();
+            Sequence columnFallingTween = DOTween.Sequence();
+            var blocks = new List<BlockView>();
             
             foreach (GridCell<BlockView> currentCell in blockColumn)
             {
@@ -95,15 +95,26 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
                 
                 targetCell.Content = currentCell.Content;
                 targetCell.Content.SortingOrder = _cachedSortingOrders.GetSortingOrder(targetCell.Position);
+                targetCell.Content.OnFall();
                 
-                fallingTween.Join(
+                columnFallingTween.Join(
                     targetCell.Content.transform.DOMove(targetCell.Transform.position, _viewOptions.FallingSpeed)
                         .SetEase(Ease.Linear));
+                
+                blocks.Add(targetCell.Content);
             }
             
             topCell.Content = null;
+
+            columnFallingTween.AppendCallback(() =>
+            {
+                foreach (BlockView block in blocks)
+                {
+                    block.OnLand();
+                }
+            });
             
-            return fallingTween;
+            return columnFallingTween;
         }
 
         public void Dispose()

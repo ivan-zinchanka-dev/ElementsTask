@@ -2,6 +2,7 @@
 using Cysharp.Threading.Tasks;
 using ElementsTask.Core.Enums;
 using ElementsTask.Core.Models;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -32,6 +33,8 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
         
         public BlockType Type => _block.Type;
         
+        public BlockState State => _block.State;
+        
         public BlockView SetModel(Block block)
         {
             _block = block;
@@ -54,6 +57,16 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
         {
             _block.State = newState;
             _animator.SetInteger(StateParam, (int)newState);
+        }
+
+        public void OnFall()
+        {
+            SwitchState(BlockState.Fall);
+        }
+
+        public void OnLand()
+        {
+            SwitchState(BlockState.Idle);
         }
 
         public async UniTask SelfDestroyAsync()

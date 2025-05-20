@@ -2,6 +2,7 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using ElementsTask.Common.Extensions;
+using ElementsTask.Core.Enums;
 using ElementsTask.Presentation.BlockFieldCore.Enums;
 using ElementsTask.Presentation.BlockFieldCore.Models;
 using ElementsTask.Presentation.BlockFieldCore.Views;
@@ -105,7 +106,13 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
                     break;
             }
 
-            return targetPosition.HasValue ? _grid.GetCell(targetPosition.Value) : null;
+            if (targetPosition.HasValue)
+            {
+                GridCell<BlockView> pair = _grid.GetCell(targetPosition.Value);
+                return pair.IsEmpty || pair.Content.State == BlockState.Idle ? pair : null; 
+            }
+
+            return null;
         }
         
         private Tween BeginSwap(GridCell<BlockView> firstCell, GridCell<BlockView> secondCell)

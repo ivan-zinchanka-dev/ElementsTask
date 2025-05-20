@@ -150,17 +150,15 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
         {
             if (IsPointerDownReceived(out Vector3 pointerPosition) && _selectedCell != null)
             {
-                Debug.Log("TryMoveBlockAsync");
-                
                 _blocksSwappingHandler.TryMoveBlockAsync(_selectedCell, pointerPosition).ContinueWith(moved =>
                 {
                     if (moved)
                     {
                         _blocksFallingHandler.SimulateFallingAsync().Forget();
-                        _blocksDestructionHandler.SimulateDestructionAsync().ContinueWith(() =>
+                        /*_blocksDestructionHandler.SimulateDestructionAsync().ContinueWith(() =>
                         {
                             _blocksFallingHandler.SimulateFallingAsync().Forget();
-                        });
+                        });*/
                     }
                 });
                 

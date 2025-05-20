@@ -913,7 +913,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _options:
     <SwappingDuration>k__BackingField: 0.15
-    <FallingSpeed>k__BackingField: 0.15
+    <FallingSpeed>k__BackingField: 1
   _grid: {fileID: 1496941456}
 --- !u!114 &1496941456
 MonoBehaviour:
