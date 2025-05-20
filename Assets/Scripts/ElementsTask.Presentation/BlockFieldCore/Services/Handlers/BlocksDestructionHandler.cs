@@ -14,12 +14,16 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
         
         private Sequence _destructionTween;
 
+        private const int TargetMatchCells = 3;
+        
+        private static readonly Vector2Int[] Directions =
+            { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+        
         public BlocksDestructionHandler(BlockFieldViewGrid grid)
         {
             _grid = grid;
         }
-
-
+        
         public async UniTask SimulateDestructionAsync()
         {
             if (_destructionTween.IsActive())
@@ -54,60 +58,68 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
             return needSimulation;
         }
         
-        
         private HashSet<Vector2Int> FindMatchLineCells(BlockFieldViewGrid grid)
         {
             var result = new HashSet<Vector2Int>();
-            int height = grid.Height;
+
             int width = grid.Width;
+            int height = grid.Height;
             
             for (int y = 0; y < height; y++)
             {
-                int count = 1;
-                for (int x = 1; x < width; x++)
-                {
-                    if (grid.GetCell(x, y)?.Content != null && 
-                        grid.GetCell(x, y).Content.Type == grid.GetCell(x - 1, y)?.Content.Type)
-                    {
-                        count++;
-                    }
-                    else
-                    {
-                        if (count >= 3)
-                            for (int k = 0; k < count; k++)
-                                result.Add(new Vector2Int(x - 1 - k, y));
-                        count = 1;
-                    }
-                }
-                if (count >= 3)
-                    for (int k = 0; k < count; k++)
-                        result.Add(new Vector2Int(width - 1 - k, y));
+                AddMatchesInLine(result, width,
+                    i => grid.GetCell(i, y)?.Content,
+                    i => new Vector2Int(i, y));
             }
             
             for (int x = 0; x < width; x++)
             {
-                int count = 1;
-                for (int y = 1; y < height; y++)
-                {
-                    if (grid.GetCell(x, y)?.Content != null &&
-                        grid.GetCell(x, y).Content.Type == grid.GetCell(x, y - 1)?.Content.Type)
-                    {
-                        count++;
-                    }
-                    else
-                    {
-                        if (count >= 3)
-                            for (int k = 0; k < count; k++)
-                                result.Add(new Vector2Int(x, y - 1 - k));
-                        count = 1;
-                    }
-                }
-                if (count >= 3)
-                    for (int k = 0; k < count; k++)
-                        result.Add(new Vector2Int(x, height - 1 - k));
+                AddMatchesInLine(result, height,
+                    i => grid.GetCell(x, i)?.Content,
+                    i => new Vector2Int(x, i));
             }
 
             return result;
+        }
+        
+        
+        private void AddMatchesInLine(
+            HashSet<Vector2Int> result,
+            int length,
+            Func<int, BlockView> getBlock,
+            Func<int, Vector2Int> getCoord)
+        {
+            int matchCells = 1;
+            for (int i = 1; i < length; i++)
+            {
+                BlockView curr = getBlock(i);
+                BlockView prev = getBlock(i - 1);
+
+                if (curr != null && prev != null && curr.Type == prev.Type)
+                {
+                    matchCells++;
+                }
+                else
+                {
+                    if (matchCells >= TargetMatchCells)
+                    {
+                        for (int k = 0; k < matchCells; k++)
+                        {
+                            result.Add(getCoord(i - 1 - k));
+                        }
+                    }
+                    
+                    matchCells = 1;
+                }
+            }
+
+            if (matchCells >= TargetMatchCells)
+            {
+                for (int k = 0; k < matchCells; k++)
+                {
+                    result.Add(getCoord(length - 1 - k));
+                }
+            }
         }
         
         private List<HashSet<Vector2Int>> FindRegionsIncludingMatches(
@@ -117,13 +129,16 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
             var visited = new bool[grid.Height, grid.Width];
             var result = new List<HashSet<Vector2Int>>();
 
-            foreach (var point in matchPoints)
+            foreach (Vector2Int point in matchPoints)
             {
                 int y = point.y;
                 int x = point.x;
 
-                if (visited[y, x]) continue;
-
+                if (visited[y, x])
+                {
+                    continue;
+                }
+                
                 BlockView block = grid.GetCell(x, y).Content;
                 var region = new HashSet<Vector2Int>();
                 var queue = new Queue<Vector2Int>();
@@ -132,13 +147,13 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
 
                 while (queue.Count > 0)
                 {
-                    var current = queue.Dequeue();
+                    Vector2Int current = queue.Dequeue();
                     region.Add(current);
 
-                    foreach (var dir in new[]{ Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right })
+                    foreach (Vector2Int direction in Directions)
                     {
-                        var nx = current.x + dir.x;
-                        var ny = current.y + dir.y;
+                        int nx = current.x + direction.x;
+                        int ny = current.y + direction.y;
 
                         if (nx >= 0 && nx < grid.Width &&
                             ny >= 0 && ny < grid.Height &&
