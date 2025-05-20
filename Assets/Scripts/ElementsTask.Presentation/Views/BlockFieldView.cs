@@ -124,7 +124,7 @@ namespace ElementsTask.Presentation.Views
                 {
                     if (moved)
                     {
-                        //_blocksFallingHandler.StartFallingAsync().Forget();
+                        _blocksFallingHandler.StartFallingAsync().Forget();
                     }
                 });
                 

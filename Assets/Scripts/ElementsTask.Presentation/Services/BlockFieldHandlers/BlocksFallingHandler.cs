@@ -7,6 +7,7 @@ using ElementsTask.Common.Extensions;
 using ElementsTask.Presentation.BlockFieldCore.Components;
 using ElementsTask.Presentation.Components.Grid;
 using ElementsTask.Presentation.Views;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace ElementsTask.Presentation.Services.BlockFieldHandlers
@@ -48,19 +49,18 @@ namespace ElementsTask.Presentation.Services.BlockFieldHandlers
         {
             bool needSimulation = false;
             
-            /*foreach (GridCell<BlockView> cell in _grid)
+            foreach (GridCell<BlockView> currentCell in _grid)
             {
-                BlockView block = cell.Content;
-                
-                if (!block.IsEmpty && block.GridPosition.y > 0)
+                if ( currentCell.Content  != null && !currentCell.Content.IsEmpty && currentCell.Position.y > 0)
                 {
-                    if (IsFloatingBlock(block, out BlockView bottom))
+                    if (IsFloatingBlock(currentCell, out GridCell<BlockView> bottom))
                     {
-                        List<BlockView> column = _grid
-                            .Where(other => 
-                                other.GridPosition.x == cell.GridPosition.x &&
-                                other.GridPosition.y >= cell.GridPosition.y)
-                            .OrderBy(other =>other.GridPosition.y)
+                        List<GridCell<BlockView>> column = _grid
+                            .Where(otherCell => 
+                                otherCell.HasContent &&
+                                otherCell.Position.x == currentCell.Position.x &&
+                                otherCell.Position.y >= currentCell.Position.y)
+                            .OrderBy(otherCell => otherCell.Position.y)
                             .ToList();
                         
                         fallingTween
@@ -69,40 +69,44 @@ namespace ElementsTask.Presentation.Services.BlockFieldHandlers
                         needSimulation = true;
                     }
                 }
-            }*/
+            }
 
             return needSimulation;
         }
         
-        /*private bool IsFloatingBlock(BlockView origin, out BlockView bottom)
+        private bool IsFloatingBlock(GridCell<BlockView> origin, out GridCell<BlockView> bottom)
         {
-            Vector2Int targetPosition = origin.GridPosition.WithY(origin.GridPosition.y - 1);
-            
-            bottom = _grid.GetCell(targetPosition).Content;
-            return bottom.IsEmpty;
+            Vector2Int targetPosition = origin.Position.WithY(origin.Position.y - 1);
+            bottom = _grid.GetCell(targetPosition);
+            return bottom.Content.IsEmpty;
         }
 
-        private Sequence Fall(BlockView emptyBottom, List<BlockView> blockColumn)
+        private Sequence Fall(GridCell<BlockView> emptyBottomCell, List<GridCell<BlockView>> blockColumn)
         {
-            Vector2Int top = new Vector2Int(emptyBottom.GridPosition.x, emptyBottom.GridPosition.y + blockColumn.Count);
-            emptyBottom.SetGridPosition(top);
-            emptyBottom.transform.position = _grid.GetCell(top).Transform.position;
+            Vector2Int topPosition = new Vector2Int(emptyBottomCell.Position.x, emptyBottomCell.Position.y + blockColumn.Count);
+            GridCell<BlockView> topCell = _grid.GetCell(topPosition);
+
+            BlockView emptyBottom = emptyBottomCell.Content;
+            emptyBottom.transform.position = topCell.Transform.position;
             
             Sequence fallingTween = DOTween.Sequence();
             
-            for (int i = 0; i < blockColumn.Count; i++)
+            foreach (GridCell<BlockView> currentCell in blockColumn)
             {
-                BlockView block = blockColumn[i];
-                Vector2Int targetPosition = new Vector2Int(block.GridPosition.x, block.GridPosition.y - 1);
-                block.SetGridPosition(targetPosition);
-
+                Vector2Int targetPosition = new Vector2Int(currentCell.Position.x, currentCell.Position.y - 1);
+                GridCell<BlockView> targetCell = _grid.GetCell(targetPosition);
+                
+                targetCell.Content = currentCell.Content;
+                
                 fallingTween.Join(
-                    block.transform.DOMove(_grid.GetCell(targetPosition).Transform.position, 0.15f)
+                    targetCell.Content.transform.DOMove(targetCell.Transform.position, 0.15f)
                         .SetEase(Ease.Linear));
             }
             
+            topCell.Content = emptyBottom;
+            
             return fallingTween;
-        }*/
+        }
 
         public void Dispose()
         {
