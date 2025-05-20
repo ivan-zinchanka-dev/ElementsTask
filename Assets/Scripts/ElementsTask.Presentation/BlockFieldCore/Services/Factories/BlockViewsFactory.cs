@@ -1,11 +1,11 @@
 ﻿using ElementsTask.Core.Models;
-using ElementsTask.Presentation.Containers;
-using ElementsTask.Presentation.Views;
+using ElementsTask.Presentation.BlockFieldCore.Containers;
+using ElementsTask.Presentation.BlockFieldCore.Views;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
-namespace ElementsTask.Presentation.Services.Factories
+namespace ElementsTask.Presentation.BlockFieldCore.Services.Factories
 {
     public class BlockViewsFactory : MonoBehaviour
     {

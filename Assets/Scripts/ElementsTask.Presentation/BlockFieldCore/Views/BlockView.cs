@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-namespace ElementsTask.Presentation.Views
+namespace ElementsTask.Presentation.BlockFieldCore.Views
 {
     public class BlockView : MonoBehaviour, IPointerDownHandler
     {
@@ -17,17 +17,15 @@ namespace ElementsTask.Presentation.Views
         
         [field:SerializeField] 
         public UnityEvent<BlockView> OnSelected { get; private set; }
-
+        
+        private Block _block;
+        
         public int SortingOrder
         {
             get =>_spriteRenderer.sortingOrder;
             set => _spriteRenderer.sortingOrder = value;
         }
-
-        //public Vector2Int GridPosition => _gridPosition;
         
-        private Block _block;
-
         public bool IsEmpty => _block.Type == BlockType.Empty;
         
         public BlockView SetModel(Block block)
@@ -35,14 +33,7 @@ namespace ElementsTask.Presentation.Views
             _block = block;
             return this;
         }
-
-        /*public BlockView SetGridPosition(Vector2Int gridPosition)
-        {
-            _gridPosition = gridPosition;
-            return this;
-        }
-        */
-
+        
         public BlockView SetSortingOrder(int sortingOrder)
         {
             _spriteRenderer.sortingOrder = sortingOrder;

@@ -1,4 +1,4 @@
-﻿namespace ElementsTask.Presentation.Enums
+﻿namespace ElementsTask.Presentation.BlockFieldCore.Enums
 {
     public enum BlockMovingDirection
     {

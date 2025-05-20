@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using ElementsTask.Core.Services;
 using ElementsTask.Presentation.Balloons;
-using ElementsTask.Presentation.Views;
+using ElementsTask.Presentation.BlockFieldCore.Views;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using VContainer;

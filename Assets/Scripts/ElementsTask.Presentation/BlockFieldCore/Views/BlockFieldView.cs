@@ -1,19 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using ElementsTask.Common.Extensions;
 using ElementsTask.Core.Models;
 using ElementsTask.Core.Services;
-using ElementsTask.Presentation.BlockFieldCore.Components;
+using ElementsTask.Presentation.BlockFieldCore.Services.Factories;
+using ElementsTask.Presentation.BlockFieldCore.Services.Handlers;
 using ElementsTask.Presentation.Components.Grid;
-using ElementsTask.Presentation.Services.BlockFieldHandlers;
-using ElementsTask.Presentation.Services.Factories;
-using Sirenix.OdinInspector;
 using UnityEngine;
 using VContainer;
 
-namespace ElementsTask.Presentation.Views
+namespace ElementsTask.Presentation.BlockFieldCore.Views
 {
     public class BlockFieldView : MonoBehaviour
     {
@@ -28,9 +25,6 @@ namespace ElementsTask.Presentation.Views
         private BlockViewsFactory _blockViewsFactory;
         
         private Vector2Int _size;
-        //private List<BlockView> _blocks;
-        //private Dictionary<Vector2Int, Transform> _cells = new ();
-        
         private GridCell<BlockView> _selectedCell;
         
         private BlocksMovingHandler _blocksMovingHandler;

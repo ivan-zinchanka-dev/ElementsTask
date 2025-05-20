@@ -1,7 +1,6 @@
 ﻿using ElementsTask.Presentation.Components.Grid;
-using ElementsTask.Presentation.Views;
 
-namespace ElementsTask.Presentation.BlockFieldCore.Components
+namespace ElementsTask.Presentation.BlockFieldCore.Views
 {
     public class BlockFieldViewGrid : Grid<BlockView> { }
 }

@@ -1,15 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using ElementsTask.Common.Extensions;
+using ElementsTask.Presentation.BlockFieldCore.Enums;
 using ElementsTask.Presentation.BlockFieldCore.Models;
+using ElementsTask.Presentation.BlockFieldCore.Views;
 using ElementsTask.Presentation.Components.Grid;
-using ElementsTask.Presentation.Enums;
-using ElementsTask.Presentation.Views;
 using UnityEngine;
 
-namespace ElementsTask.Presentation.Services.BlockFieldHandlers
+namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
 {
     public class BlocksMovingHandler : IDisposable
     {

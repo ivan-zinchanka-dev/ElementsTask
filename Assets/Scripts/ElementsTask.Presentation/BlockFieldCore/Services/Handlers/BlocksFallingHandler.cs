@@ -4,16 +4,14 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using ElementsTask.Common.Extensions;
-using ElementsTask.Presentation.BlockFieldCore.Components;
+using ElementsTask.Presentation.BlockFieldCore.Views;
 using ElementsTask.Presentation.Components.Grid;
-using ElementsTask.Presentation.Views;
 using UnityEngine;
 
-namespace ElementsTask.Presentation.Services.BlockFieldHandlers
+namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
 {
     public class BlocksFallingHandler : IDisposable
     {
-        private readonly Vector2Int _fieldSize;
         private readonly BlockFieldViewGrid _grid;
         private readonly float _fallingSpeed;
         
@@ -22,7 +20,6 @@ namespace ElementsTask.Presentation.Services.BlockFieldHandlers
         public BlocksFallingHandler(Vector2Int fieldSize, BlockFieldViewGrid grid, 
             float fallingSpeed = 3f)
         {
-            _fieldSize = fieldSize;
             _grid = grid;
             _fallingSpeed = fallingSpeed;
         }

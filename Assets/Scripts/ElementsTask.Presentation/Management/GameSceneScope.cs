@@ -1,8 +1,8 @@
 ﻿using ElementsTask.Core.Services;
 using ElementsTask.Presentation.Balloons;
-using ElementsTask.Presentation.Services.Factories;
+using ElementsTask.Presentation.BlockFieldCore.Services.Factories;
+using ElementsTask.Presentation.BlockFieldCore.Views;
 using ElementsTask.Presentation.UI;
-using ElementsTask.Presentation.Views;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
