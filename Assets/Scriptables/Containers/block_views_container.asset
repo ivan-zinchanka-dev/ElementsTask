@@ -18,7 +18,6 @@ MonoBehaviour:
     ReferencedUnityObjects:
     - {fileID: 7492366447112799565, guid: 2e3f6106db4001846872251a908ab104, type: 3}
     - {fileID: 6283191359435422561, guid: 9906fbccd89eebe4f857531234b6efb3, type: 3}
-    - {fileID: 4697112116312477777, guid: b89a70523ead4104d87c33241c71db1f, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -27,8 +26,8 @@ MonoBehaviour:
     - Name: _blockViews
       Entry: 7
       Data: 0|System.Collections.Generic.Dictionary`2[[ElementsTask.Core.Models.BlockType,
-        ElementsTask.Core],[ElementsTask.Presentation.Views.BlockView, ElementsTask.Presentation]],
-        mscorlib
+        ElementsTask.Core],[ElementsTask.Presentation.BlockFieldCore.Views.BlockView,
+        ElementsTask.Presentation]], mscorlib
     - Name: comparer
       Entry: 7
       Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[ElementsTask.Core.Models.BlockType,
@@ -38,7 +37,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 3
+      Data: 2
     - Name: 
       Entry: 7
       Data: 
@@ -72,24 +71,6 @@ MonoBehaviour:
     - Name: $v
       Entry: 10
       Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 7
-      Data: 4|ElementsTask.Core.Models.BlockType, ElementsTask.Core
-    - Name: <Id>k__BackingField
-      Entry: 1
-      Data: Empty
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: $v
-      Entry: 10
-      Data: 2
     - Name: 
       Entry: 8
       Data: 

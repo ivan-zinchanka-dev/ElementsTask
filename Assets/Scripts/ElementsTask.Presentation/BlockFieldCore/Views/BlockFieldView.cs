@@ -30,6 +30,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
         private BlockViewsFactory _blockViewsFactory;
         
         private GridCell<BlockView> _selectedCell;
+        private BlockSortingOrdersDictionary _cachedSortingOrders;
         private IObjectResolver _selfDiContainer;
         
         private BlocksSwappingHandler _blocksSwappingHandler;
@@ -45,8 +46,8 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
                 Debug.LogError("Field not loaded");
                 return;
             }
-            
-            int currentSortingOrder = 0;
+
+            _cachedSortingOrders = new BlockSortingOrdersDictionary(fieldModel.Size);
             
             for (int y = 0; y < fieldModel.Height; y++)
             {
@@ -62,7 +63,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
                         BlockView createdBlock = _blockViewsFactory
                             .CreateBlockView(blockType, cell.Transform)
                             .SetModel(block)
-                            .SetSortingOrder(currentSortingOrder);
+                            .SetSortingOrder(_cachedSortingOrders.GetSortingOrder(x, y));
 
                         cell.Content = createdBlock;
                     }
@@ -70,14 +71,13 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
                     {
                         cell.Content = null;
                     }
-                    
-                    currentSortingOrder++;
                 }
             }
-
+            
             var diBuilder = new ContainerBuilder();
             diBuilder.RegisterComponent<BlockFieldViewGrid>(_grid);
             diBuilder.RegisterInstance<BlockFieldViewOptions>(_options);
+            diBuilder.RegisterInstance<BlockSortingOrdersDictionary>(_cachedSortingOrders);
             diBuilder.Register<BlocksSwappingHandler>(Lifetime.Transient);
             diBuilder.Register<BlocksFallingHandler>(Lifetime.Transient);
             diBuilder.Register<BlocksDestructionHandler>(Lifetime.Transient);

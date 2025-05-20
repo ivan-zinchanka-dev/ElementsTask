@@ -14,15 +14,20 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
     {
         private readonly BlockFieldViewOptions _viewOptions;
         private readonly BlockFieldViewGrid _grid;
+        private readonly BlockSortingOrdersDictionary _cachedSortingOrders;
         
         private Tween _movingTween;
-        
-        public BlocksSwappingHandler(BlockFieldViewOptions viewOptions, BlockFieldViewGrid grid)
+
+        public BlocksSwappingHandler(
+            BlockFieldViewOptions viewOptions, 
+            BlockFieldViewGrid grid, 
+            BlockSortingOrdersDictionary cachedSortingOrders)
         {
             _viewOptions = viewOptions;
             _grid = grid;
+            _cachedSortingOrders = cachedSortingOrders;
         }
-        
+
         public async UniTask<bool> TryMoveBlockAsync(GridCell<BlockView> selectedCell, Vector3 targetPosition)
         {
             if (_movingTween.IsActive())
@@ -111,6 +116,8 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
             
             if (firstCell.HasContent)
             {
+                firstCell.Content.SortingOrder = _cachedSortingOrders.GetSortingOrder(firstCell.Position);
+                
                 swappingSequence
                     .Join(firstCell.Content.transform
                     .DOMove(firstCell.Transform.position, _viewOptions.SwappingDuration)
@@ -119,6 +126,8 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
 
             if (secondCell.HasContent)
             {
+                secondCell.Content.SortingOrder = _cachedSortingOrders.GetSortingOrder(secondCell.Position);
+                
                 swappingSequence
                     .Join(secondCell.Content.transform
                         .DOMove(secondCell.Transform.position, _viewOptions.SwappingDuration)
@@ -127,20 +136,6 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
 
             return swappingSequence;
         }
-        
-        /*private Tween BeginSwap(BlockView first, BlockView second)
-        {
-            BlockSwapData firstData = first.GetSwapData();
-            BlockSwapData secondData = second.GetSwapData();
-            
-            return DOTween.Sequence()
-                .Append(first.transform
-                    .DOMove(secondData.WorldPosition, _viewOptions.SwappingDuration)
-                    .SetEase(Ease.Flash))
-                .Join(second.transform
-                    .DOMove(firstData.WorldPosition, _viewOptions.SwappingDuration)
-                    .SetEase(Ease.Flash));
-        }*/
 
         public void Dispose()
         {

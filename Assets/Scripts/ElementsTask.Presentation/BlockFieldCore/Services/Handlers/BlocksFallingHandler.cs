@@ -15,15 +15,20 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
     {
         private readonly BlockFieldViewOptions _viewOptions;
         private readonly BlockFieldViewGrid _grid;
+        private readonly BlockSortingOrdersDictionary _cachedSortingOrders;
         
         private Sequence _fallingTween;
 
-        public BlocksFallingHandler(BlockFieldViewOptions viewOptions, BlockFieldViewGrid grid)
+        public BlocksFallingHandler(
+            BlockFieldViewOptions viewOptions, 
+            BlockFieldViewGrid grid, 
+            BlockSortingOrdersDictionary cachedSortingOrders)
         {
             _viewOptions = viewOptions;
             _grid = grid;
+            _cachedSortingOrders = cachedSortingOrders;
         }
-        
+
         public async UniTask SimulateFallingAsync()
         {
             if (_fallingTween.IsActive())
@@ -89,7 +94,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
                 GridCell<BlockView> targetCell = _grid.GetCell(targetPosition);
                 
                 targetCell.Content = currentCell.Content;
-                targetCell.Content.SortingOrder -= _grid.Width;
+                targetCell.Content.SortingOrder = _cachedSortingOrders.GetSortingOrder(targetCell.Position);
                 
                 fallingTween.Join(
                     targetCell.Content.transform.DOMove(targetCell.Transform.position, _viewOptions.FallingSpeed)

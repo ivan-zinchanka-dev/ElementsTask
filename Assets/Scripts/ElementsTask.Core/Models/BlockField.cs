@@ -8,6 +8,7 @@ namespace ElementsTask.Core.Models
 
         public int Height => _blocks.GetLength(0);
         public int Width => _blocks.GetLength(1);
+        public Vector2Int Size => new Vector2Int(Width, Height);
         
         public BlockField(Block[,] blocks)
         {
