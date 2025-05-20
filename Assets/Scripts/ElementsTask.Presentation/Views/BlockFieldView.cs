@@ -6,6 +6,7 @@ using ElementsTask.Core.Models;
 using ElementsTask.Core.Services;
 using ElementsTask.Presentation.Services.BlockFieldHandlers;
 using ElementsTask.Presentation.Services.Factories;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using VContainer;
 
@@ -25,6 +26,9 @@ namespace ElementsTask.Presentation.Views
         
         private Vector2Int _size;
         private List<BlockView> _blocks;
+        private Dictionary<Vector2Int, Transform> _cells = new ();
+        
+        [ShowInInspector]
         private BlockView _selectedBlock;
         
         private BlocksMovingHandler _blocksMovingHandler;
@@ -55,13 +59,15 @@ namespace ElementsTask.Presentation.Views
                         .SetGridPosition(new Vector2Int(x, y))
                         .SetSortingOrder(currentSortingOrder);
 
+                    _cells.Add(new Vector2Int(x, y), cell);
+                    
                     _blocks.Add(createdBlock);
                     currentSortingOrder++;
                 }
             }
             
             _blocksMovingHandler = new BlocksMovingHandler(_size, _blocks);
-            _blocksFallingHandler = new BlocksFallingHandler(_size, _blocks);
+            _blocksFallingHandler = new BlocksFallingHandler(_cells, _size, _blocks);
             
             foreach (BlockView block in _blocks)
             {
@@ -80,6 +86,8 @@ namespace ElementsTask.Presentation.Views
             _blocksMovingHandler?.Dispose();
             _blocksFallingHandler?.Dispose();
 
+            _cells.Clear();
+            
             if (_blocks != null)
             {
                 foreach (BlockView block in _blocks)
@@ -118,14 +126,22 @@ namespace ElementsTask.Presentation.Views
         {
             if (IsPointerDownReceived(out Vector3 pointerPosition) && _selectedBlock != null)
             {
+                Debug.Log("TryMoveBlockAsync");
+                
                 _blocksMovingHandler.TryMoveBlockAsync(_selectedBlock, pointerPosition).ContinueWith(moved =>
                 {
                     if (moved)
                     {
-                        _blocksFallingHandler.SimulateFallingAsync().Forget();
+                        _blocksFallingHandler.StartFallingAsync().Forget();
                     }
                 });
+                
+                _selectedBlock = null;
             }
+            /*else
+            {
+                _selectedBlock = null;
+            }*/
         }
     }
 }

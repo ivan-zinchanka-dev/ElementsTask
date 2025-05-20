@@ -24,14 +24,14 @@ namespace ElementsTask.Presentation.Management
         [Button]
         public async Task RestartAsync()
         {
-            _balloonsStoppingTokenSource.Cancel();
+            /*_balloonsStoppingTokenSource.Cancel();
             _balloonsStoppingTokenSource.Dispose();
-            _balloonsManager.Dispose();
+            _balloonsManager.Dispose();*/
             
             await _blockFieldView.ReInitialize();
             
-            _balloonsStoppingTokenSource = new CancellationTokenSource();
-            _balloonsManager.StartAsync(transform, _balloonsStoppingTokenSource.Token).Forget();
+            /*_balloonsStoppingTokenSource = new CancellationTokenSource();
+            _balloonsManager.StartAsync(transform, _balloonsStoppingTokenSource.Token).Forget();*/
         }
 
         [Button]
@@ -45,13 +45,13 @@ namespace ElementsTask.Presentation.Management
         {
             await _blockFieldView.InitializeAsync();
 
-            _balloonsManager.StartAsync(transform, _balloonsStoppingTokenSource.Token).Forget();
+            //_balloonsManager.StartAsync(transform, _balloonsStoppingTokenSource.Token).Forget();
         }
 
         private void OnDestroy()
         {
-            _balloonsStoppingTokenSource.Cancel();
-            _balloonsStoppingTokenSource.Dispose();
+            /*_balloonsStoppingTokenSource.Cancel();
+            _balloonsStoppingTokenSource.Dispose();*/
             
             _blockFieldView.Cleanup();
         }
