@@ -4,7 +4,8 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using ElementsTask.Common.Extensions;
-using ElementsTask.Presentation.Models;
+using ElementsTask.Presentation.BlockFieldCore.Components;
+using ElementsTask.Presentation.Components.Grid;
 using ElementsTask.Presentation.Views;
 using UnityEngine;
 
@@ -13,17 +14,16 @@ namespace ElementsTask.Presentation.Services.BlockFieldHandlers
     public class BlocksFallingHandler : IDisposable
     {
         private readonly Vector2Int _fieldSize;
-        private readonly List<BlockView> _blocks;
+        private readonly BlockFieldViewGrid _grid;
         private readonly float _fallingSpeed;
-        private Dictionary<Vector2Int, Transform> _cells = new();
         
         private Sequence _fallingTween;
         
-        public BlocksFallingHandler(Dictionary<Vector2Int, Transform> cells, Vector2Int fieldSize, List<BlockView> blocks, float fallingSpeed = 3f)
+        public BlocksFallingHandler(Vector2Int fieldSize, BlockFieldViewGrid grid, 
+            float fallingSpeed = 3f)
         {
-            _cells = cells;
             _fieldSize = fieldSize;
-            _blocks = blocks;
+            _grid = grid;
             _fallingSpeed = fallingSpeed;
         }
         
@@ -48,16 +48,18 @@ namespace ElementsTask.Presentation.Services.BlockFieldHandlers
         {
             bool needSimulation = false;
             
-            foreach (BlockView block in _blocks)
+            /*foreach (GridCell<BlockView> cell in _grid)
             {
+                BlockView block = cell.Content;
+                
                 if (!block.IsEmpty && block.GridPosition.y > 0)
                 {
                     if (IsFloatingBlock(block, out BlockView bottom))
                     {
-                        List<BlockView> column = _blocks
+                        List<BlockView> column = _grid
                             .Where(other => 
-                                other.GridPosition.x == block.GridPosition.x &&
-                                other.GridPosition.y >= block.GridPosition.y)
+                                other.GridPosition.x == cell.GridPosition.x &&
+                                other.GridPosition.y >= cell.GridPosition.y)
                             .OrderBy(other =>other.GridPosition.y)
                             .ToList();
                         
@@ -67,16 +69,16 @@ namespace ElementsTask.Presentation.Services.BlockFieldHandlers
                         needSimulation = true;
                     }
                 }
-            }
+            }*/
 
             return needSimulation;
         }
         
-        private bool IsFloatingBlock(BlockView origin, out BlockView bottom)
+        /*private bool IsFloatingBlock(BlockView origin, out BlockView bottom)
         {
             Vector2Int targetPosition = origin.GridPosition.WithY(origin.GridPosition.y - 1);
             
-            bottom = _blocks.Find(other => other.GridPosition == targetPosition);
+            bottom = _grid.GetCell(targetPosition).Content;
             return bottom.IsEmpty;
         }
 
@@ -84,7 +86,7 @@ namespace ElementsTask.Presentation.Services.BlockFieldHandlers
         {
             Vector2Int top = new Vector2Int(emptyBottom.GridPosition.x, emptyBottom.GridPosition.y + blockColumn.Count);
             emptyBottom.SetGridPosition(top);
-            emptyBottom.transform.position = _cells[top].transform.position;
+            emptyBottom.transform.position = _grid.GetCell(top).Transform.position;
             
             Sequence fallingTween = DOTween.Sequence();
             
@@ -95,12 +97,12 @@ namespace ElementsTask.Presentation.Services.BlockFieldHandlers
                 block.SetGridPosition(targetPosition);
 
                 fallingTween.Join(
-                    block.transform.DOMove(_cells[targetPosition].position, 0.15f)
+                    block.transform.DOMove(_grid.GetCell(targetPosition).Transform.position, 0.15f)
                         .SetEase(Ease.Linear));
             }
             
             return fallingTween;
-        }
+        }*/
 
         public void Dispose()
         {

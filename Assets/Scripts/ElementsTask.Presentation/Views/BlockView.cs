@@ -1,5 +1,5 @@
 ﻿using ElementsTask.Core.Models;
-using ElementsTask.Presentation.Models;
+using ElementsTask.Presentation.BlockFieldCore.Models;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
@@ -18,7 +18,13 @@ namespace ElementsTask.Presentation.Views
         [field:SerializeField] 
         public UnityEvent<BlockView> OnSelected { get; private set; }
 
-        public Vector2Int GridPosition => _gridPosition;
+        public int SortingOrder
+        {
+            get =>_spriteRenderer.sortingOrder;
+            set => _spriteRenderer.sortingOrder = value;
+        }
+
+        //public Vector2Int GridPosition => _gridPosition;
         
         private Block _block;
 
@@ -30,11 +36,12 @@ namespace ElementsTask.Presentation.Views
             return this;
         }
 
-        public BlockView SetGridPosition(Vector2Int gridPosition)
+        /*public BlockView SetGridPosition(Vector2Int gridPosition)
         {
             _gridPosition = gridPosition;
             return this;
         }
+        */
 
         public BlockView SetSortingOrder(int sortingOrder)
         {
@@ -49,7 +56,7 @@ namespace ElementsTask.Presentation.Views
 
         public BlockSwapData GetSwapData()
         {
-            return new BlockSwapData(transform.position, _gridPosition, _spriteRenderer.sortingOrder);
+            return new BlockSwapData(transform.position, _spriteRenderer.sortingOrder);
         }
     }
 }

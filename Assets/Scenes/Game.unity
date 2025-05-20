@@ -876,7 +876,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1496941454}
   - component: {fileID: 1496941455}
-  - component: {fileID: 1496941453}
+  - component: {fileID: 1496941456}
   m_Layer: 0
   m_Name: blocks_field
   m_TagString: Untagged
@@ -884,20 +884,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1496941453
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1496941452}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 20c5025bf2c3441688c9c54d73ccd68b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _cellSize: {x: 0.78, y: 0.78}
-  _cellsCount: {x: 6, y: 9}
 --- !u!4 &1496941454
 Transform:
   m_ObjectHideFlags: 0
@@ -925,7 +911,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90df7b0ce6a64187a45d22f7ad6ff32b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _grid: {fileID: 1496941453}
+  _grid: {fileID: 1496941456}
+--- !u!114 &1496941456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1496941452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdbd133f01f14e049cdff763a1e67c92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cellSize: {x: 0.78, y: 0.78}
+  _cellsCount: {x: 6, y: 9}
 --- !u!1 &1574301656
 GameObject:
   m_ObjectHideFlags: 0

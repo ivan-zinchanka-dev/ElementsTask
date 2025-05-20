@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using ElementsTask.Common.Extensions;
+using ElementsTask.Presentation.BlockFieldCore.Models;
+using ElementsTask.Presentation.Components.Grid;
 using ElementsTask.Presentation.Enums;
-using ElementsTask.Presentation.Models;
 using ElementsTask.Presentation.Views;
 using UnityEngine;
 
@@ -13,31 +14,31 @@ namespace ElementsTask.Presentation.Services.BlockFieldHandlers
     public class BlocksMovingHandler : IDisposable
     {
         private readonly Vector2Int _fieldSize;
-        private readonly List<BlockView> _blocks;
+        private readonly Grid<BlockView> _grid;
         private readonly float _movingDuration;
         
         private Tween _movingTween;
         
-        public BlocksMovingHandler(Vector2Int fieldSize, List<BlockView> blocks, float movingDuration = 0.15f)
+        public BlocksMovingHandler(Vector2Int fieldSize, Grid<BlockView> grid, float movingDuration = 0.15f)
         {
             _fieldSize = fieldSize;
-            _blocks = blocks;
+            _grid = grid;
             _movingDuration = movingDuration;
         }
         
-        public async UniTask<bool> TryMoveBlockAsync(BlockView selectedBlock, Vector3 targetPosition)
+        public async UniTask<bool> TryMoveBlockAsync(GridCell<BlockView> selectedCell, Vector3 targetPosition)
         {
             if (_movingTween.IsActive())
             {
                 return false;
             }
             
-            BlockView pair = GetSwapPair(selectedBlock, 
-                GetMovingDirection(targetPosition - selectedBlock.transform.position));
+            GridCell<BlockView> pair = GetSwapPair(selectedCell, 
+                GetMovingDirection(targetPosition - selectedCell.Transform.position));
 
             if (pair != null)
             {
-                _movingTween = BeginSwap(selectedBlock, pair);
+                _movingTween = BeginSwap(selectedCell, pair);
                 await _movingTween.ToUniTask();
             }
             
@@ -56,43 +57,48 @@ namespace ElementsTask.Presentation.Services.BlockFieldHandlers
             }
         }
         
-        private BlockView GetSwapPair(BlockView origin, BlockMovingDirection swapDirection)
+        private GridCell<BlockView> GetSwapPair(GridCell<BlockView> origin, BlockMovingDirection swapDirection)
         {
             Vector2Int? targetPosition = null;
             
             switch (swapDirection)
             {
                 case BlockMovingDirection.Up:
-                    if (origin.GridPosition.y < _fieldSize.y - 1)
+                    if (origin.Position.y < _fieldSize.y - 1)
                     {
-                        targetPosition = origin.GridPosition.WithY(origin.GridPosition.y + 1);
+                        targetPosition = origin.Position.WithY(origin.Position.y + 1);
                     }
                     break;
                 
                 case BlockMovingDirection.Down:
-                    if (origin.GridPosition.y > 0)
+                    if (origin.Position.y > 0)
                     {
-                        targetPosition = origin.GridPosition.WithY(origin.GridPosition.y - 1);
+                        targetPosition = origin.Position.WithY(origin.Position.y - 1);
                     }
                     break;
                 
                 case BlockMovingDirection.Right:
-                    if (origin.GridPosition.x < _fieldSize.x - 1)
+                    if (origin.Position.x < _fieldSize.x - 1)
                     {
-                        targetPosition = origin.GridPosition.WithX(origin.GridPosition.x + 1);
+                        targetPosition = origin.Position.WithX(origin.Position.x + 1);
                     }
                     break;
                 
                 case BlockMovingDirection.Left:
-                    if (origin.GridPosition.x > 0)
+                    if (origin.Position.x > 0)
                     {
-                        targetPosition = origin.GridPosition.WithX(origin.GridPosition.x - 1);
+                        targetPosition = origin.Position.WithX(origin.Position.x - 1);
                     }
                     break;
             }
 
-            return targetPosition.HasValue ? 
-                _blocks.Find(block => block.GridPosition == targetPosition.Value) : null;
+            return targetPosition.HasValue ? _grid.GetCell(targetPosition.Value) : null;
+        }
+        
+        private Tween BeginSwap(GridCell<BlockView> firstCell, GridCell<BlockView> secondCell)
+        {
+            (firstCell.Content, secondCell.Content) = (secondCell.Content, firstCell.Content);
+            return BeginSwap(firstCell.Content, secondCell.Content);
         }
         
         private Tween BeginSwap(BlockView first, BlockView second)
@@ -100,13 +106,9 @@ namespace ElementsTask.Presentation.Services.BlockFieldHandlers
             BlockSwapData firstData = first.GetSwapData();
             BlockSwapData secondData = second.GetSwapData();
             
-            first
-                .SetGridPosition(secondData.GridPosition)
-                .SetSortingOrder(secondData.SortingOrder);
+            first.SetSortingOrder(secondData.SortingOrder);
             
-            second
-                .SetGridPosition(firstData.GridPosition)
-                .SetSortingOrder(firstData.SortingOrder);
+            second.SetSortingOrder(firstData.SortingOrder);
             
             return DOTween.Sequence()
                 .Append(first.transform

@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using ElementsTask.Common.Extensions;
 using ElementsTask.Core.Models;
 using ElementsTask.Core.Services;
+using ElementsTask.Presentation.BlockFieldCore.Components;
+using ElementsTask.Presentation.Components.Grid;
 using ElementsTask.Presentation.Services.BlockFieldHandlers;
 using ElementsTask.Presentation.Services.Factories;
 using Sirenix.OdinInspector;
@@ -15,7 +18,7 @@ namespace ElementsTask.Presentation.Views
     public class BlockFieldView : MonoBehaviour
     {
         [SerializeField] 
-        private Services.Grid _grid;
+        private BlockFieldViewGrid _grid;
      
         [Inject]
         private Camera _camera;
@@ -25,11 +28,10 @@ namespace ElementsTask.Presentation.Views
         private BlockViewsFactory _blockViewsFactory;
         
         private Vector2Int _size;
-        private List<BlockView> _blocks;
-        private Dictionary<Vector2Int, Transform> _cells = new ();
+        //private List<BlockView> _blocks;
+        //private Dictionary<Vector2Int, Transform> _cells = new ();
         
-        [ShowInInspector]
-        private BlockView _selectedBlock;
+        private GridCell<BlockView> _selectedCell;
         
         private BlocksMovingHandler _blocksMovingHandler;
         private BlocksFallingHandler _blocksFallingHandler;
@@ -45,33 +47,32 @@ namespace ElementsTask.Presentation.Views
             }
 
             _size = new Vector2Int(fieldModel.Width, fieldModel.Height);
-            _blocks = new List<BlockView>(_size.x * _size.y);
+            //_blocks = new List<BlockView>(_size.x * _size.y);
             int currentSortingOrder = 0;
             
             for (int y = 0; y < fieldModel.Height; y++)
             {
                 for (int x = 0; x < fieldModel.Width; x++)
                 {
-                    Transform cell = _grid.Cells[y, x];
+                    GridCell<BlockView> cell = _grid.GetCell(x, y);
                     BlockView createdBlock = _blockViewsFactory
-                        .CreateBlockView(fieldModel.GetBlock(x, y).Type, cell)
+                        .CreateBlockView(fieldModel.GetBlock(x, y).Type, cell.Transform)
                         .SetModel(fieldModel.GetBlock(x, y))
-                        .SetGridPosition(new Vector2Int(x, y))
                         .SetSortingOrder(currentSortingOrder);
 
-                    _cells.Add(new Vector2Int(x, y), cell);
+                    cell.Content = createdBlock;
                     
-                    _blocks.Add(createdBlock);
+                    //_blocks.Add(createdBlock);
                     currentSortingOrder++;
                 }
             }
             
-            _blocksMovingHandler = new BlocksMovingHandler(_size, _blocks);
-            _blocksFallingHandler = new BlocksFallingHandler(_cells, _size, _blocks);
+            _blocksMovingHandler = new BlocksMovingHandler(_size, _grid);
+            _blocksFallingHandler = new BlocksFallingHandler(_size, _grid);
             
-            foreach (BlockView block in _blocks)
+            foreach (GridCell<BlockView> cell in _grid)
             {
-                block.OnSelected.AddListener(OnBlockSelected);
+                cell.Content?.OnSelected.AddListener(OnBlockSelected);
             }
         }
 
@@ -85,22 +86,13 @@ namespace ElementsTask.Presentation.Views
         {
             _blocksMovingHandler?.Dispose();
             _blocksFallingHandler?.Dispose();
-
-            _cells.Clear();
             
-            if (_blocks != null)
+            foreach (GridCell<BlockView> cell in _grid)
             {
-                foreach (BlockView block in _blocks)
+                if (cell.Content != null)
                 {
-                    block.OnSelected.RemoveListener(OnBlockSelected);
-                }
-            
-                foreach (BlockView block in _blocks)
-                {
-                    if (block != null)
-                    {
-                        Destroy(block.gameObject);
-                    }
+                    cell.Content.OnSelected.RemoveListener(OnBlockSelected);
+                    Destroy(cell.Content.gameObject);
                 }
             }
         }
@@ -119,24 +111,24 @@ namespace ElementsTask.Presentation.Views
 
         private void OnBlockSelected(BlockView selectedBlock)
         {
-            _selectedBlock = selectedBlock;
+            _selectedCell = _grid.FirstOrDefault(cell => cell.Content == selectedBlock);
         }
 
         private void Update()
         {
-            if (IsPointerDownReceived(out Vector3 pointerPosition) && _selectedBlock != null)
+            if (IsPointerDownReceived(out Vector3 pointerPosition) && _selectedCell != null)
             {
                 Debug.Log("TryMoveBlockAsync");
                 
-                _blocksMovingHandler.TryMoveBlockAsync(_selectedBlock, pointerPosition).ContinueWith(moved =>
+                _blocksMovingHandler.TryMoveBlockAsync(_selectedCell, pointerPosition).ContinueWith(moved =>
                 {
                     if (moved)
                     {
-                        _blocksFallingHandler.StartFallingAsync().Forget();
+                        //_blocksFallingHandler.StartFallingAsync().Forget();
                     }
                 });
                 
-                _selectedBlock = null;
+                _selectedCell = null;
             }
             /*else
             {

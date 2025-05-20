@@ -1,17 +1,15 @@
 ﻿using UnityEngine;
 
-namespace ElementsTask.Presentation.Models
+namespace ElementsTask.Presentation.BlockFieldCore.Models
 {
     public struct BlockSwapData
     {
         public Vector3 WorldPosition { get; }
-        public Vector2Int GridPosition { get; }
         public int SortingOrder { get; }
-
-        public BlockSwapData(Vector3 worldPosition, Vector2Int gridPosition, int sortingOrder)
+        
+        public BlockSwapData(Vector3 worldPosition, int sortingOrder)
         {
             WorldPosition = worldPosition;
-            GridPosition = gridPosition;
             SortingOrder = sortingOrder;
         }
     }
