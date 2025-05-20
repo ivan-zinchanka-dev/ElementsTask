@@ -12,6 +12,9 @@ namespace ElementsTask.Presentation.Components.Grid
         private Vector2Int _cellsCount = new Vector2Int(6, 9);
 
         private GridCell<TContent>[,] _cells;
+
+        public int Width => _cellsCount.x;
+        public int Height => _cellsCount.y;
         
         public GridCell<TContent> GetCell(Vector2Int position) => GetCell(position.x, position.y);
         

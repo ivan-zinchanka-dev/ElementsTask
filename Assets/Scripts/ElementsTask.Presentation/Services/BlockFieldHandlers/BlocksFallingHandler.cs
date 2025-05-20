@@ -7,7 +7,6 @@ using ElementsTask.Common.Extensions;
 using ElementsTask.Presentation.BlockFieldCore.Components;
 using ElementsTask.Presentation.Components.Grid;
 using ElementsTask.Presentation.Views;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace ElementsTask.Presentation.Services.BlockFieldHandlers
@@ -97,6 +96,7 @@ namespace ElementsTask.Presentation.Services.BlockFieldHandlers
                 GridCell<BlockView> targetCell = _grid.GetCell(targetPosition);
                 
                 targetCell.Content = currentCell.Content;
+                targetCell.Content.SortingOrder -= _grid.Width;
                 
                 fallingTween.Join(
                     targetCell.Content.transform.DOMove(targetCell.Transform.position, 0.15f)
