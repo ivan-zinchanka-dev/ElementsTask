@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ElementsTask.Presentation.Components.Grid
 {
-    public class Grid<TContent> : MonoBehaviour, IEnumerable<GridCell<TContent>> where TContent : class
+    public class Grid<TContent> : MonoBehaviour, IEnumerable<GridCell<TContent>> where TContent : Object
     {
         [SerializeField]
         private Vector2 _cellSize = new Vector2(0.78f, 0.78f);

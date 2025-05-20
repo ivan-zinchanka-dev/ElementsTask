@@ -140,6 +140,12 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
             _selectedCell = _grid.FirstOrDefault(cell => cell.Content == selectedBlock);
         }
 
+        [Button]
+        private void SimGravity()
+        {
+            _blocksFallingHandler.SimulateFallingAsync().Forget();
+        }
+
         private void Update()
         {
             if (IsPointerDownReceived(out Vector3 pointerPosition) && _selectedCell != null)
@@ -151,6 +157,10 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
                     if (moved)
                     {
                         _blocksFallingHandler.SimulateFallingAsync().Forget();
+                        _blocksDestructionHandler.SimulateDestructionAsync().ContinueWith(() =>
+                        {
+                            _blocksFallingHandler.SimulateFallingAsync().Forget();
+                        });
                     }
                 });
                 

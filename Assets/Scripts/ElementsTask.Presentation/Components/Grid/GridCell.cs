@@ -2,7 +2,7 @@
 
 namespace ElementsTask.Presentation.Components.Grid
 {
-    public class GridCell<TContent> where TContent : class
+    public class GridCell<TContent> where TContent : Object
     {
         public Transform Transform { get; private set; }
         public TContent Content { get; set; }

@@ -2,8 +2,6 @@
 using Cysharp.Threading.Tasks;
 using ElementsTask.Core.Enums;
 using ElementsTask.Core.Models;
-using ElementsTask.Presentation.BlockFieldCore.Models;
-using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -33,7 +31,6 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
         }
         
         public BlockType Type => _block.Type;
-        //public bool IsEmpty => Type == BlockType.Empty;
         
         public BlockView SetModel(Block block)
         {
@@ -53,11 +50,6 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
             OnSelected?.Invoke(this);
         }
 
-        public BlockSwapData GetSwapData()
-        {
-            return new BlockSwapData(transform.position, _spriteRenderer.sortingOrder);
-        }
-
         private void SwitchState(BlockState newState)
         {
             _block.State = newState;
@@ -73,7 +65,10 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
                 await UniTask.Delay(TimeSpan.FromSeconds(_destroyAnimClip.length), DelayType.DeltaTime);
             }
             
-            _spriteRenderer.color = Color.clear;
+            OnSelected.RemoveAllListeners();
+            Destroy(gameObject);
+            
+            await UniTask.Yield(PlayerLoopTiming.Update);
         }
     }
 }
