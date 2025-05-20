@@ -24,7 +24,6 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
         [Inject] 
         private BlockViewsFactory _blockViewsFactory;
         
-        private Vector2Int _size;
         private GridCell<BlockView> _selectedCell;
         
         private BlocksMovingHandler _blocksMovingHandler;
@@ -39,9 +38,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
                 Debug.LogError("Field not loaded");
                 return;
             }
-
-            _size = new Vector2Int(fieldModel.Width, fieldModel.Height);
-            //_blocks = new List<BlockView>(_size.x * _size.y);
+            
             int currentSortingOrder = 0;
             
             for (int y = 0; y < fieldModel.Height; y++)
@@ -61,8 +58,8 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
                 }
             }
             
-            _blocksMovingHandler = new BlocksMovingHandler(_size, _grid);
-            _blocksFallingHandler = new BlocksFallingHandler(_size, _grid);
+            _blocksMovingHandler = new BlocksMovingHandler(_grid);
+            _blocksFallingHandler = new BlocksFallingHandler(_grid);
             
             foreach (GridCell<BlockView> cell in _grid)
             {

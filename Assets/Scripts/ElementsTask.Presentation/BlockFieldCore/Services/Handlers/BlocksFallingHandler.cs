@@ -17,7 +17,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
         
         private Sequence _fallingTween;
         
-        public BlocksFallingHandler(Vector2Int fieldSize, BlockFieldViewGrid grid, 
+        public BlocksFallingHandler(BlockFieldViewGrid grid, 
             float fallingSpeed = 3f)
         {
             _grid = grid;

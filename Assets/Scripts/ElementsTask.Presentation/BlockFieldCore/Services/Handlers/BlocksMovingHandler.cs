@@ -12,15 +12,13 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
 {
     public class BlocksMovingHandler : IDisposable
     {
-        private readonly Vector2Int _fieldSize;
         private readonly Grid<BlockView> _grid;
         private readonly float _movingDuration;
         
         private Tween _movingTween;
         
-        public BlocksMovingHandler(Vector2Int fieldSize, Grid<BlockView> grid, float movingDuration = 0.15f)
+        public BlocksMovingHandler(Grid<BlockView> grid, float movingDuration = 0.15f)
         {
-            _fieldSize = fieldSize;
             _grid = grid;
             _movingDuration = movingDuration;
         }
@@ -55,7 +53,18 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
                 return inputDirection.y > 0f ? BlockMovingDirection.Up : BlockMovingDirection.Down;
             }
         }
-        
+
+        private bool CanMoveUp(GridCell<BlockView> origin)
+        {
+            if (origin.Position.y < _grid.Height - 1)
+            {
+                GridCell<BlockView> upCell = _grid.GetCell(origin.Position.WithY(origin.Position.y + 1));
+                return upCell.Content != null && !upCell.Content.IsEmpty;
+            }
+
+            return false;
+        }
+
         private GridCell<BlockView> GetSwapPair(GridCell<BlockView> origin, BlockMovingDirection swapDirection)
         {
             Vector2Int? targetPosition = null;
@@ -63,7 +72,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
             switch (swapDirection)
             {
                 case BlockMovingDirection.Up:
-                    if (origin.Position.y < _fieldSize.y - 1)
+                    if (CanMoveUp(origin))
                     {
                         targetPosition = origin.Position.WithY(origin.Position.y + 1);
                     }
@@ -77,7 +86,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
                     break;
                 
                 case BlockMovingDirection.Right:
-                    if (origin.Position.x < _fieldSize.x - 1)
+                    if (origin.Position.x < _grid.Width - 1)
                     {
                         targetPosition = origin.Position.WithX(origin.Position.x + 1);
                     }

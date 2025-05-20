@@ -21,7 +21,15 @@ namespace ElementsTask.Presentation.Components.Grid
         public GridCell<TContent> GetCell(int x, int y)
         {
             _cells ??= GenerateCells();
-            return _cells[y, x];
+
+            if (x >= 0 && x < Width && y >= 0 && y < Height)
+            {
+                return _cells[y, x];
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public IEnumerator<GridCell<TContent>> GetEnumerator()
