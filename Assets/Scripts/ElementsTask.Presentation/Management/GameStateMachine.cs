@@ -46,6 +46,7 @@ namespace ElementsTask.Presentation.Management
         {
             PlayerProgress playerProgress = await _progressService.GetPlayerProgressAsync();
             playerProgress.CurrentLevelIndex++;
+            await playerProgress.SaveAsync();
             
             await RestartAsync();
         }
