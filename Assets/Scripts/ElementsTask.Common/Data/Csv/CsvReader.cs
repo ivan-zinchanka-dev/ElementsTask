@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace ElementsTask.Common.Services.Csv
+namespace ElementsTask.Common.Data.Csv
 {
     public static class CsvReader
     {

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using ElementsTask.Data.BlockFieldCore.Models;
 using ElementsTask.Data.Levels.Services;
-using ElementsTask.Data.PlayerProgression;
+using ElementsTask.Data.PlayerProgression.Models;
 using ElementsTask.Data.PlayerProgression.Services;
 
 namespace ElementsTask.Data.BlockFieldCore.Services
@@ -9,17 +9,41 @@ namespace ElementsTask.Data.BlockFieldCore.Services
     public class BlockFieldCreator
     {
         private readonly IPlayerProgressService _playerProgressService;
-        private readonly ILevelLoader _levelLoader;
+        private readonly IBuildInLevelLoader _buildInLevelLoader;
+        private readonly ISavedLevelLoader _savedLevelLoader;
 
-        public BlockFieldCreator(IPlayerProgressService playerProgressService, ILevelLoader levelLoader)
+        public BlockFieldCreator(
+            IPlayerProgressService playerProgressService, 
+            IBuildInLevelLoader buildInLevelLoader, 
+            ISavedLevelLoader savedLevelLoader)
         {
             _playerProgressService = playerProgressService;
-            _levelLoader = levelLoader;
+            _buildInLevelLoader = buildInLevelLoader;
+            _savedLevelLoader = savedLevelLoader;
         }
 
         public async Task<BlockField> CreateFieldAsync()
         {
-            BlockField field = await _levelLoader.LoadLevelAsync(_playerProgressService.CurrentLevelIndex);
+            PlayerProgress playerProgress = await _playerProgressService.GetPlayerProgressAsync();
+            
+            if (playerProgress.HasSavedFieldState)
+            {
+                return await GetFieldFromSavedLevelAsync();
+            }
+            else
+            {
+                return await GetFieldFromBuiltInLevelAsync(playerProgress);
+            }
+        }
+
+        private async Task<BlockField> GetFieldFromSavedLevelAsync()
+        {
+            return await _savedLevelLoader.LoadCurrentLevelAsync();
+        }
+
+        private async Task<BlockField> GetFieldFromBuiltInLevelAsync(PlayerProgress playerProgress)
+        {
+            BlockField field = await _buildInLevelLoader.LoadLevelAsync(playerProgress.CurrentLevelIndex);
 
             if (field != null)
             {
@@ -27,8 +51,8 @@ namespace ElementsTask.Data.BlockFieldCore.Services
             }
             else
             {
-                _playerProgressService.CurrentLevelIndex = 0;
-                return await _levelLoader.LoadLevelAsync(_playerProgressService.CurrentLevelIndex);
+                playerProgress.CurrentLevelIndex = 0;
+                return await _buildInLevelLoader.LoadLevelAsync(playerProgress.CurrentLevelIndex);
             }
         }
     }

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using ElementsTask.Data.PlayerProgression;
+using ElementsTask.Data.PlayerProgression.Models;
 using ElementsTask.Data.PlayerProgression.Services;
 using ElementsTask.Presentation.Balloons;
 using ElementsTask.Presentation.BlockFieldCore.Views;
@@ -38,7 +39,9 @@ namespace ElementsTask.Presentation.Management
         [Button]
         public async Task NextAsync()
         {
-            _progressService.CurrentLevelIndex++;
+            PlayerProgress playerProgress = await _progressService.GetPlayerProgressAsync();
+            playerProgress.CurrentLevelIndex++;
+            
             await RestartAsync();
         }
 

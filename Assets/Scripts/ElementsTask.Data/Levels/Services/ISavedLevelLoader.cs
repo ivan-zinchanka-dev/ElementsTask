@@ -3,8 +3,8 @@ using ElementsTask.Data.BlockFieldCore.Models;
 
 namespace ElementsTask.Data.Levels.Services
 {
-    public interface ILevelLoader
+    public interface ISavedLevelLoader
     {
-        public Task<BlockField> LoadLevelAsync(int levelIndex);
+        public Task<BlockField> LoadCurrentLevelAsync();
     }
 }

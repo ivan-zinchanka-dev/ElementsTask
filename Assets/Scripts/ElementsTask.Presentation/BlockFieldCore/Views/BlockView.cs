@@ -33,13 +33,11 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
         }
         
         public BlockType Type => _block.Type;
-        
-        public BlockState State => _block.State;
+        public BlockState State { get; private set; } = BlockState.Idle;
         
         public BlockView SetModel(Block block)
         {
             _block = block;
-            _block.State = BlockState.Idle;
             return this;
         }
         
@@ -51,7 +49,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
 
         public BlockView RandomizeIdleAnimation()
         {
-            if (_block.State == BlockState.Idle)
+            if (State == BlockState.Idle)
             {
                 _animator.Play(IdleStateHash, 0, Random.Range(0f, 1f));
             }
@@ -61,7 +59,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            if (_block.State == BlockState.Idle)
+            if (State == BlockState.Idle)
             {
                 OnSelected?.Invoke(this);
             }
@@ -94,7 +92,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
         
         private void SwitchState(BlockState newState)
         {
-            _block.State = newState;
+            State = newState;
             _animator.SetInteger(StateParam, (int)newState);
         }
     }

@@ -1,15 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using ElementsTask.Common.Services.Csv;
+using ElementsTask.Common.Data.Csv;
 using ElementsTask.Data.BlockFieldCore.Models;
 using UnityEngine;
 
 namespace ElementsTask.Data.Levels.Services
 {
-    public class CsvLevelLoader : ILevelLoader
+    public class BuildInLevelLoader : IBuildInLevelLoader
     {
-        private static readonly Vector2Int LevelSize = new Vector2Int(6, 9);
-        
         public async Task<BlockField> LoadLevelAsync(int levelIndex)
         {
             string levelName = GetLevelResourceName(levelIndex);
@@ -30,7 +28,7 @@ namespace ElementsTask.Data.Levels.Services
             Resources.UnloadAsset(levelCsv);
             dataRows.Reverse();
             
-            Block[,] blocks = new Block[dataRows.Count, LevelSize.x];
+            Block[,] blocks = new Block[dataRows.Count, BlockFieldConstraints.LevelSize.x];
             
             for (int y = 0; y < blocks.GetLength(0); y++)
             {

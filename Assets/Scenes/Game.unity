@@ -844,12 +844,14 @@ MonoBehaviour:
   - {fileID: 412412614}
   - {fileID: 1496941452}
   - {fileID: 298642047}
+  _useCryptography: 0
   _camera: {fileID: 1873385848}
   _gameStateMachine: {fileID: 945397797}
   _headUpDisplay: {fileID: 298642052}
   _balloonViewsFactory: {fileID: 412412617}
   _blockViewsFactory: {fileID: 412412616}
   _blockFieldView: {fileID: 1496941455}
+  _cryptoConfig: {fileID: 11400000, guid: d354f992aa6501c47afa86784b576baa, type: 2}
 --- !u!4 &1479904744
 Transform:
   m_ObjectHideFlags: 0

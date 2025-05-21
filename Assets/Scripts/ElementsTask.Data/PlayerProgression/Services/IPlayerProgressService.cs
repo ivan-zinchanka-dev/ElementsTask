@@ -1,7 +1,11 @@
-﻿namespace ElementsTask.Data.PlayerProgression.Services
+﻿using System;
+using System.Threading.Tasks;
+using ElementsTask.Data.PlayerProgression.Models;
+
+namespace ElementsTask.Data.PlayerProgression.Services
 {
-    public interface IPlayerProgressService
+    public interface IPlayerProgressService : IDisposable
     {
-        public int CurrentLevelIndex { get; set; }
+        public Task<PlayerProgress> GetPlayerProgressAsync();
     }
 }
