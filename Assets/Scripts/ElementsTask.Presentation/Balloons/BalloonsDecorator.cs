@@ -13,7 +13,8 @@ namespace ElementsTask.Presentation.Balloons
     {
         [SerializeField]
         private int _maxBalloons = 3;
-
+        [SerializeField]
+        private HorizontalSinusAnimation.Data _animationData;
         [SerializeField] 
         private RectTransform _area;
         
@@ -37,7 +38,7 @@ namespace ElementsTask.Presentation.Balloons
                             Quaternion.identity,
                             transform);
                         
-                        balloon.Animation.FlyToRightAsync(new HorizontalSinusAnimation.Data()).ContinueWith(() =>
+                        balloon.Animation.FlyToRightAsync(_animationData).ContinueWith(() =>
                         {
                             _activeBalloons.Remove(balloon);
                             DestroyBalloon(balloon);
@@ -53,7 +54,7 @@ namespace ElementsTask.Presentation.Balloons
                             Quaternion.identity,
                             transform);
                         
-                        balloon.Animation.FlyToLeftAsync(new HorizontalSinusAnimation.Data()).ContinueWith(() =>
+                        balloon.Animation.FlyToLeftAsync(_animationData).ContinueWith(() =>
                         {
                             _activeBalloons.Remove(balloon);
                             DestroyBalloon(balloon);

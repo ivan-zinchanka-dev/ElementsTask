@@ -1,4 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ namespace ElementsTask.Common.Animations
 {
     public class HorizontalSinusAnimation : MonoBehaviour
     {
+        [Serializable]
         public class Data
         {
             public float Duration = 15f;
