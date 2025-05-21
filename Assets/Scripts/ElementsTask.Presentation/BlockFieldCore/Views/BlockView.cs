@@ -62,7 +62,10 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            OnSelected?.Invoke(this);
+            if (_block.State == BlockState.Idle)
+            {
+                OnSelected?.Invoke(this);
+            }
         }
         
         public void OnFall()
