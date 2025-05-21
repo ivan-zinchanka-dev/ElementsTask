@@ -1,4 +1,4 @@
-﻿namespace ElementsTask.Presentation.Balloons
+﻿namespace ElementsTask.Presentation.Balloons.Enums
 {
     public enum BalloonKind
     {

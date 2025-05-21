@@ -1,7 +1,7 @@
 ﻿using ElementsTask.Common.Animations;
 using UnityEngine;
 
-namespace ElementsTask.Presentation.Balloons
+namespace ElementsTask.Presentation.Balloons.Views
 {
     public class BalloonView : MonoBehaviour
     {

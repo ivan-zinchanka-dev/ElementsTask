@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using ElementsTask.Common.Animations;
+using ElementsTask.Presentation.Balloons.Enums;
+using ElementsTask.Presentation.Balloons.Factories;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using VContainer;
 using Random = UnityEngine.Random;
 
-namespace ElementsTask.Presentation.Balloons
+namespace ElementsTask.Presentation.Balloons.Views
 {
     public class BalloonsDecorator : MonoBehaviour
     {

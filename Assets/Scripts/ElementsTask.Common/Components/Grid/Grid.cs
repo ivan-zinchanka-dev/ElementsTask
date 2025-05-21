@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ElementsTask.Presentation.Components.Grid
+namespace ElementsTask.Common.Components.Grid
 {
     public class Grid<TContent> : MonoBehaviour, IEnumerable<GridCell<TContent>> where TContent : Object
     {

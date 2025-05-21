@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using ElementsTask.Common.Components.Grid;
 using ElementsTask.Common.Extensions;
 using ElementsTask.Presentation.BlockFieldCore.Models;
 using ElementsTask.Presentation.BlockFieldCore.Views;
-using ElementsTask.Presentation.Components.Grid;
 using UnityEngine;
 
 namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers

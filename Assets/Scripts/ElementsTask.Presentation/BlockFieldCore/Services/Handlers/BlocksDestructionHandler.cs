@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using ElementsTask.Common.Components.Grid;
 using ElementsTask.Data.BlockFieldCore.Enums;
 using ElementsTask.Data.BlockFieldCore.Models;
 using ElementsTask.Presentation.BlockFieldCore.Views;
-using ElementsTask.Presentation.Components.Grid;
 using UnityEngine;
 
 namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers

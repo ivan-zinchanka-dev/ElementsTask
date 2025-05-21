@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace ElementsTask.Presentation.Components.Grid
+namespace ElementsTask.Common.Components.Grid
 {
     public class GridCell<TContent> where TContent : Object
     {

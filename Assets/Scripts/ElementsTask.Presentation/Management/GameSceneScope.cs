@@ -4,6 +4,7 @@ using ElementsTask.Data.BlockFieldCore.Services;
 using ElementsTask.Data.Levels.Services;
 using ElementsTask.Data.PlayerProgression.Services;
 using ElementsTask.Presentation.Balloons;
+using ElementsTask.Presentation.Balloons.Factories;
 using ElementsTask.Presentation.BlockFieldCore.Services.Factories;
 using ElementsTask.Presentation.BlockFieldCore.Views;
 using ElementsTask.Presentation.UI;
@@ -51,7 +52,6 @@ namespace ElementsTask.Presentation.Management
             builder.Register<IBuildInLevelLoader, BuildInLevelLoader>(Lifetime.Singleton);
             builder.Register<ISavedLevelLoader, SavedLevelLoader>(Lifetime.Singleton);
             builder.Register<BlockFieldCreator>(Lifetime.Singleton);
-            builder.Register<BalloonsManager>(Lifetime.Transient);
             
             builder.RegisterComponent<Camera>(_camera);
             builder.RegisterComponent<GameStateMachine>(_gameStateMachine);

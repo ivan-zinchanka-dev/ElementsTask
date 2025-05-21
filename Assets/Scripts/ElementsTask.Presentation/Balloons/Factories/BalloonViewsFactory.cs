@@ -1,8 +1,11 @@
-﻿using UnityEngine;
+﻿using ElementsTask.Presentation.Balloons.Containers;
+using ElementsTask.Presentation.Balloons.Enums;
+using ElementsTask.Presentation.Balloons.Views;
+using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
-namespace ElementsTask.Presentation.Balloons
+namespace ElementsTask.Presentation.Balloons.Factories
 {
     public class BalloonViewsFactory : MonoBehaviour
     {

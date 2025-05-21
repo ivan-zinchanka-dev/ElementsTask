@@ -1,12 +1,12 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using ElementsTask.Common.Components.Grid;
 using ElementsTask.Common.Extensions;
 using ElementsTask.Data.BlockFieldCore.Enums;
 using ElementsTask.Presentation.BlockFieldCore.Enums;
 using ElementsTask.Presentation.BlockFieldCore.Models;
 using ElementsTask.Presentation.BlockFieldCore.Views;
-using ElementsTask.Presentation.Components.Grid;
 using UnityEngine;
 
 namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers

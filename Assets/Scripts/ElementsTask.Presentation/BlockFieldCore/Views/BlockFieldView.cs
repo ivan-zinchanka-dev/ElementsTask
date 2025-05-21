@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using ElementsTask.Common.Components.Grid;
 using ElementsTask.Common.Extensions;
 using ElementsTask.Data.BlockFieldCore.Models;
 using ElementsTask.Data.BlockFieldCore.Services;
@@ -9,7 +10,6 @@ using ElementsTask.Data.PlayerProgression.Services;
 using ElementsTask.Presentation.BlockFieldCore.Models;
 using ElementsTask.Presentation.BlockFieldCore.Services.Factories;
 using ElementsTask.Presentation.BlockFieldCore.Services.Handlers;
-using ElementsTask.Presentation.Components.Grid;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;

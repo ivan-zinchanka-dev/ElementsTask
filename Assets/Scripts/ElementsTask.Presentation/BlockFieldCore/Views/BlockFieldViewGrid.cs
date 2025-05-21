@@ -1,6 +1,6 @@
-﻿using ElementsTask.Data.BlockFieldCore.Models;
+﻿using ElementsTask.Common.Components.Grid;
+using ElementsTask.Data.BlockFieldCore.Models;
 using ElementsTask.Data.PlayerProgression.Models;
-using ElementsTask.Presentation.Components.Grid;
 using UnityEngine;
 
 namespace ElementsTask.Presentation.BlockFieldCore.Views
