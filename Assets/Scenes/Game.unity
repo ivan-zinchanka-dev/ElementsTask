@@ -878,7 +878,7 @@ MonoBehaviour:
   - {fileID: 1496941452}
   - {fileID: 298642047}
   - {fileID: 1159865045}
-  _useCryptography: 0
+  _useCryptography: 1
   _camera: {fileID: 1873385848}
   _gameStateMachine: {fileID: 945397797}
   _headUpDisplay: {fileID: 298642052}
@@ -1015,12 +1015,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxBalloons: 3
+  _spawnDelaySecondsRange: {x: 2, y: 6}
+  _area: {fileID: 1537733658}
   _animationData:
     Duration: 20
     Distance: 9
     Frequency: 1
     Amplitude: 0.75
-  _area: {fileID: 1537733658}
 --- !u!1 &1574301656
 GameObject:
   m_ObjectHideFlags: 0

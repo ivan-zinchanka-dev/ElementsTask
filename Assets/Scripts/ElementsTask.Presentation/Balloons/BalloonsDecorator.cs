@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using ElementsTask.Common.Animations;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using VContainer;
 using Random = UnityEngine.Random;
@@ -13,17 +14,34 @@ namespace ElementsTask.Presentation.Balloons
     {
         [SerializeField]
         private int _maxBalloons = 3;
+        
         [SerializeField]
-        private HorizontalSinusAnimation.Data _animationData;
+        [MinMaxSlider(0f, 10f)]
+        private Vector2 _spawnDelaySecondsRange = new Vector2(2f, 6f);
+        
         [SerializeField] 
         private RectTransform _area;
+        [SerializeField]
+        private HorizontalSinusAnimation.Data _animationData;
         
         [Inject]
         private BalloonViewsFactory _balloonViewsFactory;
         
         private readonly List<BalloonView> _activeBalloons = new();
         private Vector3[] _cachedAreaCorners;
-        
+
+        private void Reset()
+        {
+            _area = GetComponent<RectTransform>();
+            _animationData = new HorizontalSinusAnimation.Data()
+            {
+                Duration = 20f,
+                Distance = 9f,
+                Frequency = 1f,
+                Amplitude = 0.75f,
+            };
+        }
+
         public async UniTask StartAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
@@ -62,13 +80,9 @@ namespace ElementsTask.Presentation.Balloons
                         
                         _activeBalloons.Add(balloon);
                     }
-
-
-
-                    
                 }
 
-                await UniTask.Delay(TimeSpan.FromSeconds(5), DelayType.DeltaTime, cancellationToken: stoppingToken);
+                await UniTask.Delay(GetRandomDelay(), DelayType.DeltaTime, cancellationToken: stoppingToken);
             }
         }
 
@@ -101,7 +115,12 @@ namespace ElementsTask.Presentation.Balloons
             }
         }
 
-        private bool TwoVariantsRandom()
+        private TimeSpan GetRandomDelay()
+        {
+            return TimeSpan.FromSeconds(Random.Range(_spawnDelaySecondsRange.x, _spawnDelaySecondsRange.y));
+        }
+
+        private static bool TwoVariantsRandom()
         {
             return Random.Range(0, 2) == 0;
         }
@@ -112,16 +131,6 @@ namespace ElementsTask.Presentation.Balloons
             {
                 Destroy(balloon.gameObject);
             }
-        }
-
-        public void Dispose()
-        {
-            foreach (BalloonView balloon in _activeBalloons)
-            {
-                DestroyBalloon(balloon);
-            }
-            
-            _activeBalloons.Clear();
         }
         
     }
