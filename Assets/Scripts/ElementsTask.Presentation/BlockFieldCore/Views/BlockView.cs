@@ -2,7 +2,6 @@
 using Cysharp.Threading.Tasks;
 using ElementsTask.Core.Enums;
 using ElementsTask.Core.Models;
-using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;

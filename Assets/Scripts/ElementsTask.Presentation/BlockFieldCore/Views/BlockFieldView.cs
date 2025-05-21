@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using ElementsTask.Common.Extensions;
@@ -98,7 +99,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
         [Button]
         private void FindToDestroy()
         {
-            _blocksDestructionHandler.SimulateDestructionAsync().Forget();
+            _blocksDestructionHandler.SimulateDestructionIfNeedAsync().Forget();
         }
 
         public async Task ReInitialize()
@@ -144,9 +145,9 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
         [Button]
         private void SimGravity()
         {
-            _blocksFallingHandler.SimulateFallingAsync().Forget();
+            _blocksFallingHandler.SimulateFallingIfNeedAsync().Forget();
         }
-
+        
         private void Update()
         {
             if (IsPointerDownReceived(out Vector3 pointerPosition) && _selectedCell != null)
@@ -155,16 +156,30 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
                 {
                     if (moved)
                     {
-                        _blocksFallingHandler.SimulateFallingAsync().Forget();
-                        _blocksDestructionHandler.SimulateDestructionAsync().ContinueWith(() =>
-                        {
-                            _blocksFallingHandler.SimulateFallingAsync().Forget();
-                        });
+                        NormalizeFieldAsync().Forget();
                     }
                 });
                 
                 _selectedCell = null;
             }
+            
         }
+        
+        private async UniTask NormalizeFieldAsync()
+        {
+            bool normalizationCompleted = false;
+            
+            while (!normalizationCompleted)
+            {
+                bool fallingSimulated = await _blocksFallingHandler.SimulateFallingIfNeedAsync();
+                bool destructionSimulated = await _blocksDestructionHandler.SimulateDestructionIfNeedAsync();
+
+                if (!fallingSimulated && !destructionSimulated)
+                {
+                    normalizationCompleted = true;
+                }
+            }
+        }
+        
     }
 }

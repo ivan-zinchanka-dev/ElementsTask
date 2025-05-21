@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using ElementsTask.Core.Enums;
 using ElementsTask.Core.Models;
 using ElementsTask.Presentation.BlockFieldCore.Views;
 using ElementsTask.Presentation.Components.Grid;
@@ -8,7 +9,7 @@ using UnityEngine;
 
 namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
 {
-    public class BlocksDestructionHandler : IDisposable
+    public class BlocksDestructionHandler
     {
         private const int TargetMatchCells = 3;
         private static readonly Vector2Int[] Directions =
@@ -21,11 +22,16 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
             _grid = grid;
         }
         
-        public async UniTask SimulateDestructionAsync()
+        public async UniTask<bool> SimulateDestructionIfNeedAsync()
         {
             var destructionTasks = new List<UniTask>();
             
             List<HashSet<Vector2Int>> regions = FindRegionsIncludingMatches(_grid, FindMatchLineCells(_grid));
+
+            if (regions.Count == 0)
+            {
+                return false;
+            }
 
             foreach (HashSet<Vector2Int> region in regions)
             {
@@ -41,6 +47,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
             }
 
             await UniTask.WhenAll(destructionTasks);
+            return true;
         }
         
         
@@ -81,7 +88,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
                 BlockView currentBlock = getBlock(i);
                 BlockView previousBlock = getBlock(i - 1);
 
-                if (currentBlock != null && previousBlock != null && currentBlock.Type == previousBlock.Type)
+                if (IsRelevant(currentBlock) && IsRelevant(previousBlock) && currentBlock.Type == previousBlock.Type)
                 {
                     matchCells++;
                 }
@@ -158,14 +165,15 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
             return result;
         }
 
-        private static bool HasBlockType(GridCell<BlockView> cell, BlockType blockType)
+        private static bool IsRelevant(BlockView block)
         {
-            return cell != null && cell.HasContent && cell.Content.Type == blockType;
+            return block != null && block.State == BlockState.Idle;
         }
 
-        public void Dispose()
+        private static bool HasBlockType(GridCell<BlockView> cell, BlockType blockType)
         {
-            //_destructionTween.Kill();
+            return cell != null && IsRelevant(cell.Content) && cell.Content.Type == blockType;
         }
+        
     }
 }

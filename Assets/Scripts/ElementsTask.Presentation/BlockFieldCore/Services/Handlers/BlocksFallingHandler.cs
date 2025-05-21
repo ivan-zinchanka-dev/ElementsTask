@@ -29,20 +29,24 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
             _cachedSortingOrders = cachedSortingOrders;
         }
 
-        public async UniTask SimulateFallingAsync()
+        public async UniTask<bool> SimulateFallingIfNeedAsync()
         {
             if (_fallingTween.IsActive())
             {
-                return;
+                return false;
             }
             
             _fallingTween = DOTween.Sequence();
+            bool simulateOnce = false;
             
             while (TrySimulateFalling())
             {
                 await _fallingTween.ToUniTask();
+                simulateOnce = true;
                 _fallingTween = DOTween.Sequence();
             }
+            
+            return simulateOnce;
         }
 
         private bool TrySimulateFalling()
