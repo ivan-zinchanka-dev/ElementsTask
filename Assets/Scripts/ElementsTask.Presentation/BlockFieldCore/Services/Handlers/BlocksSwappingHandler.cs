@@ -48,15 +48,22 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
             return true;
         }
 
-        private static BlockMovingDirection GetMovingDirection(Vector3 inputDirection)
+        private static BlockMovingDirection GetMovingDirection(Vector3 inputOffset)
         {
-            if (Mathf.Abs(inputDirection.x) > Mathf.Abs(inputDirection.y))
+            const float minOffsetMagnitude = 0.5f;
+
+            if (inputOffset.magnitude < minOffsetMagnitude)
             {
-                return inputDirection.x > 0f ? BlockMovingDirection.Right : BlockMovingDirection.Left;
+                return BlockMovingDirection.None;
+            }
+            
+            if (Mathf.Abs(inputOffset.x) > Mathf.Abs(inputOffset.y))
+            {
+                return inputOffset.x > 0f ? BlockMovingDirection.Right : BlockMovingDirection.Left;
             }
             else
             {
-                return inputDirection.y > 0f ? BlockMovingDirection.Up : BlockMovingDirection.Down;
+                return inputOffset.y > 0f ? BlockMovingDirection.Up : BlockMovingDirection.Down;
             }
         }
 
