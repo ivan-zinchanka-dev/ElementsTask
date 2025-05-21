@@ -100,7 +100,7 @@ namespace ElementsTask.Data.PlayerProgression.Services
             _playerProgress.OnDemandSave += OnDemandSaveAsync;
         }
         
-        private async void OnDemandSaveAsync()
+        private async Task OnDemandSaveAsync()
         {
             await Task.Run(SavePlayerProgress);
         }

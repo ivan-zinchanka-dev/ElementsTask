@@ -23,12 +23,17 @@ namespace ElementsTask.Presentation.Management
         
         private CancellationTokenSource _balloonsStoppingTokenSource = new ();
         
+        
         [Button]
         public async Task RestartAsync()
         {
             /*_balloonsStoppingTokenSource.Cancel();
             _balloonsStoppingTokenSource.Dispose();
             _balloonsManager.Dispose();*/
+            
+            PlayerProgress playerProgress = await _progressService.GetPlayerProgressAsync();
+            playerProgress.BlockFieldState.Clear();
+            await playerProgress.SaveAsync();
             
             await _blockFieldView.ReInitialize();
             

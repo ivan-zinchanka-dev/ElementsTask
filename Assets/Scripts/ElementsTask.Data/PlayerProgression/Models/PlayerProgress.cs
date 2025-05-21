@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using ElementsTask.Data.BlockFieldCore.Models;
 using ElementsTask.Data.PlayerProgression.Converters;
 using Newtonsoft.Json;
@@ -19,11 +20,14 @@ namespace ElementsTask.Data.PlayerProgression.Models
         [JsonIgnore]
         public bool HasSavedFieldState => BlockFieldState != null && BlockFieldState.Count > 0;
         
-        internal event Action OnDemandSave;
+        internal event Func<Task> OnDemandSave;
         
-        public void Save()
+        public async Task SaveAsync()
         {
-            OnDemandSave?.Invoke();
+            if (OnDemandSave != null)
+            {
+                await OnDemandSave();
+            }
         }
     }
 }

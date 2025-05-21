@@ -36,9 +36,6 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
         private BlockSortingOrdersDictionary _cachedSortingOrders;
         private IObjectResolver _selfDiContainer;
         
-        // TODO Remove
-        private PlayerProgress _playerProgress;
-        
         private BlocksSwappingHandler _blocksSwappingHandler;
         private BlocksFallingHandler _blocksFallingHandler;
         private BlocksDestructionHandler _blocksDestructionHandler;
@@ -54,7 +51,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
             }
 
             _cachedSortingOrders = new BlockSortingOrdersDictionary(fieldModel.Size);
-            _playerProgress = await _playerProgressService.GetPlayerProgressAsync();
+            Task<PlayerProgress> getPlayerProgressTask = _playerProgressService.GetPlayerProgressAsync();
             
             for (int y = 0; y < fieldModel.Height; y++)
             {
@@ -81,9 +78,11 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
                     }
                 }
             }
+
+            PlayerProgress playerProgress = getPlayerProgressTask.Result;
             
             var diBuilder = new ContainerBuilder();
-            diBuilder.RegisterComponent<BlockFieldViewGrid>(_grid.WithChangesTracking(_playerProgress));
+            diBuilder.RegisterComponent<BlockFieldViewGrid>(_grid.WithChangesTracking(playerProgress));
             diBuilder.RegisterInstance<BlockFieldViewOptions>(_options);
             diBuilder.RegisterInstance<BlockSortingOrdersDictionary>(_cachedSortingOrders);
             diBuilder.Register<BlocksSwappingHandler>(Lifetime.Transient);

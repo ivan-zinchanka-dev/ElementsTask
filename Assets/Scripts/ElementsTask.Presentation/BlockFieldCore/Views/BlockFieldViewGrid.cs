@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using Codice.CM.Common;
-using ElementsTask.Data.BlockFieldCore.Models;
+﻿using ElementsTask.Data.BlockFieldCore.Models;
 using ElementsTask.Data.PlayerProgression.Models;
 using ElementsTask.Presentation.Components.Grid;
 using UnityEngine;
@@ -17,13 +15,8 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
             return this;
         }
 
-        public void SaveBlockFieldState()
+        public async void SaveBlockFieldState()
         {
-            /*if (!_playerProgress.HasSavedFieldState)
-            {
-                _playerProgress.BlockFieldState = new Dictionary<Vector2Int, Block>();
-            }*/
-
             for (int y = 0; y < _cellsCount.y; y++)
             {
                 for (int x = 0; x < _cellsCount.x; x++)
@@ -32,7 +25,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
                 }
             }
          
-            _playerProgress.Save();
+            await _playerProgress.SaveAsync();
         }
 
         private static Block GetBlock(BlockView blockView)
