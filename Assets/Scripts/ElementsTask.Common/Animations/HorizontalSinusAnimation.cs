@@ -32,12 +32,14 @@ namespace ElementsTask.Common.Animations
         
         private async UniTask FlyAsync(Data data, float endX)
         {
+            float baseY = transform.position.y;
+
             await transform.DOMoveX(endX, data.Duration).SetEase(Ease.Linear)
                 .OnUpdate(() =>
                 {
                     float x = transform.position.x;
-                    float y = Mathf.Sin(x * data.Frequency) * data.Amplitude;
-                    transform.position = new Vector3(x, y, transform.position.z);
+                    float yOffset = Mathf.Sin(x * data.Frequency) * data.Amplitude;
+                    transform.position = new Vector3(x, baseY + yOffset, transform.position.z);
                 })
                 .SetLink(gameObject)
                 .ToUniTask();

@@ -12,13 +12,32 @@ namespace ElementsTask.Presentation.Balloons
         [Inject] 
         private IObjectResolver _diContainer;
         
-        public BalloonView CreateBalloonView(BalloonKind balloonKind, Transform parent = null, bool worldPositionStays = false)
+        public BalloonView CreateBalloonView(
+            BalloonKind balloonKind, 
+            Transform parent = null, 
+            bool worldPositionStays = false)
         {
             BalloonView originalView = _viewsContainer.GetViewByKind(balloonKind);
 
             if (originalView != null)
             {
                 return _diContainer.Instantiate(originalView, parent, worldPositionStays);
+            }
+
+            return null;
+        }
+        
+        public BalloonView CreateBalloonView(
+            BalloonKind balloonKind, 
+            Vector3 position = default, 
+            Quaternion rotation = default, 
+            Transform parent = null)
+        {
+            BalloonView originalView = _viewsContainer.GetViewByKind(balloonKind);
+
+            if (originalView != null)
+            {
+                return _diContainer.Instantiate(originalView, position, rotation, parent);
             }
 
             return null;
