@@ -33,6 +33,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
         }
         
         public BlockType Type => _block.Type;
+        public Block Model => _block;
         public BlockState State { get; private set; } = BlockState.Idle;
         
         public BlockView SetModel(Block block)

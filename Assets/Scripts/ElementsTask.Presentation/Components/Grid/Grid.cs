@@ -7,11 +7,11 @@ namespace ElementsTask.Presentation.Components.Grid
     public class Grid<TContent> : MonoBehaviour, IEnumerable<GridCell<TContent>> where TContent : Object
     {
         [SerializeField]
-        private Vector2 _cellSize = new Vector2(0.78f, 0.78f);
+        protected Vector2 _cellSize = new Vector2(0.78f, 0.78f);
         [SerializeField]
-        private Vector2Int _cellsCount = new Vector2Int(6, 9);
+        protected Vector2Int _cellsCount = new Vector2Int(6, 9);
 
-        private GridCell<TContent>[,] _cells;
+        protected GridCell<TContent>[,] _cells;
 
         public int Width => _cellsCount.x;
         public int Height => _cellsCount.y;

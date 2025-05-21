@@ -1,15 +1,15 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using ElementsTask.Common.Extensions;
 using ElementsTask.Data.BlockFieldCore.Models;
 using ElementsTask.Data.BlockFieldCore.Services;
+using ElementsTask.Data.PlayerProgression.Models;
+using ElementsTask.Data.PlayerProgression.Services;
 using ElementsTask.Presentation.BlockFieldCore.Models;
 using ElementsTask.Presentation.BlockFieldCore.Services.Factories;
 using ElementsTask.Presentation.BlockFieldCore.Services.Handlers;
 using ElementsTask.Presentation.Components.Grid;
-using Sirenix.OdinInspector;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -29,10 +29,15 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
         private BlockFieldCreator _blockFieldCreator;
         [Inject] 
         private BlockViewsFactory _blockViewsFactory;
+        [Inject] 
+        private IPlayerProgressService _playerProgressService;
         
         private GridCell<BlockView> _selectedCell;
         private BlockSortingOrdersDictionary _cachedSortingOrders;
         private IObjectResolver _selfDiContainer;
+        
+        // TODO Remove
+        private PlayerProgress _playerProgress;
         
         private BlocksSwappingHandler _blocksSwappingHandler;
         private BlocksFallingHandler _blocksFallingHandler;
@@ -49,6 +54,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
             }
 
             _cachedSortingOrders = new BlockSortingOrdersDictionary(fieldModel.Size);
+            _playerProgress = await _playerProgressService.GetPlayerProgressAsync();
             
             for (int y = 0; y < fieldModel.Height; y++)
             {
@@ -77,7 +83,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
             }
             
             var diBuilder = new ContainerBuilder();
-            diBuilder.RegisterComponent<BlockFieldViewGrid>(_grid);
+            diBuilder.RegisterComponent<BlockFieldViewGrid>(_grid.WithChangesTracking(_playerProgress));
             diBuilder.RegisterInstance<BlockFieldViewOptions>(_options);
             diBuilder.RegisterInstance<BlockSortingOrdersDictionary>(_cachedSortingOrders);
             diBuilder.Register<BlocksSwappingHandler>(Lifetime.Transient);
@@ -94,12 +100,6 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
             {
                 cell.Content?.OnSelected.AddListener(OnBlockSelected);
             }
-        }
-
-        [Button]
-        private void FindToDestroy()
-        {
-            _blocksDestructionHandler.SimulateDestructionIfNeedAsync().Forget();
         }
 
         public async Task ReInitialize()
@@ -141,12 +141,6 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
         {
             _selectedCell = _grid.FirstOrDefault(cell => cell.Content == selectedBlock);
         }
-
-        [Button]
-        private void SimGravity()
-        {
-            _blocksFallingHandler.SimulateFallingIfNeedAsync().Forget();
-        }
         
         private void Update()
         {
@@ -156,6 +150,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
                 {
                     if (moved)
                     {
+                        _grid.SaveBlockFieldState();
                         NormalizeFieldAsync().Forget();
                     }
                 });
@@ -176,6 +171,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
 
                 if (!fallingSimulated && !destructionSimulated)
                 {
+                    _grid.SaveBlockFieldState();
                     normalizationCompleted = true;
                 }
             }

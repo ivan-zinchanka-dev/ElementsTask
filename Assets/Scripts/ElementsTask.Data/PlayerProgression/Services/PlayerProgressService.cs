@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using ElementsTask.Common.Data.Crypto.Abstractions;
+using ElementsTask.Data.BlockFieldCore.Models;
 using ElementsTask.Data.PlayerProgression.Models;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -16,6 +18,7 @@ namespace ElementsTask.Data.PlayerProgression.Services
         
         private DirectoryInfo _dataDirectoryInfo;
         private PlayerProgress _playerProgress;
+        private readonly object _saveLock = new();
         
         private readonly IStreamCryptoService _cryptoService;
         
@@ -61,7 +64,7 @@ namespace ElementsTask.Data.PlayerProgression.Services
             if (!File.Exists(fullFileName))
             {
                 _playerProgress = new PlayerProgress();
-                File.Create(fullFileName);
+                await using (File.Create(fullFileName)) { }
             }
             else
             {
@@ -86,7 +89,7 @@ namespace ElementsTask.Data.PlayerProgression.Services
                     _playerProgress = new PlayerProgress();
                     
                     var loggedException = 
-                        new Exception("[ProgressDataAdapter] Deserialization of progress_model.edm is failed. Default model created");
+                        new Exception("[ProgressDataAdapter] Deserialization of progress_model.edm is failed. Default model created", ex);
                     Debug.LogException(loggedException);
                             
                     File.Create(fullFileName);
@@ -99,16 +102,22 @@ namespace ElementsTask.Data.PlayerProgression.Services
         
         private async void OnDemandSaveAsync()
         {
-            await Task.Run(SaveProgressModel);
+            await Task.Run(SavePlayerProgress);
         }
         
-        private void SaveProgressModel()
+        private void SavePlayerProgress()
         {
-            string jsonNotation = JsonConvert.SerializeObject(_playerProgress);
-            string encryptedNotation = _cryptoService.Encrypt(jsonNotation);
-                
-            lock (_playerProgress)
+            lock (_saveLock)
             {
+                var playerProgressCopy = new PlayerProgress()
+                {
+                    CurrentLevelIndex = _playerProgress.CurrentLevelIndex,
+                    BlockFieldState = new Dictionary<Vector2Int, Block>(_playerProgress.BlockFieldState),
+                };
+                
+                string jsonNotation = JsonConvert.SerializeObject(playerProgressCopy);
+                string encryptedNotation = _cryptoService.Encrypt(jsonNotation);
+                
                 File.WriteAllText(GetFullFileName(), encryptedNotation);
             }
         }

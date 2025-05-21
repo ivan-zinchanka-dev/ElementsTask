@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace ElementsTask.Data.BlockFieldCore.Models
@@ -6,11 +7,18 @@ namespace ElementsTask.Data.BlockFieldCore.Models
     [Serializable]
     public class BlockType : IEquatable<BlockType>
     {
-        public static readonly BlockType Empty = new BlockType("Empty");
+        public static readonly BlockType Empty = new BlockType(EmptyId);
+        private const string EmptyId = "Empty";
         
         [field:SerializeField]
+        [JsonProperty]
         public string Id { get; private set; }
 
+        public BlockType()
+        {
+            Id = EmptyId;
+        }
+        
         private BlockType(string id)
         {
             Id = id;
