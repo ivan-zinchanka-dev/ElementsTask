@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ElementsTask.Core.Models;
+using ElementsTask.Data.BlockFieldCore.Models;
 using ElementsTask.Presentation.BlockFieldCore.Views;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;

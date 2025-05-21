@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ElementsTask.Common.Services.Csv;
-using ElementsTask.Core.Models;
+using ElementsTask.Data.BlockFieldCore.Models;
 using UnityEngine;
 
-namespace ElementsTask.Core.Services
+namespace ElementsTask.Data.Levels.Services
 {
     public class CsvLevelLoader : ILevelLoader
     {

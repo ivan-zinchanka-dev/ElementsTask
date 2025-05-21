@@ -1,4 +1,4 @@
-﻿namespace ElementsTask.Core.Enums
+﻿namespace ElementsTask.Data.BlockFieldCore.Enums
 {
     public enum BlockState
     {

@@ -1,7 +1,10 @@
 ﻿using System.Threading.Tasks;
-using ElementsTask.Core.Models;
+using ElementsTask.Data.BlockFieldCore.Models;
+using ElementsTask.Data.Levels.Services;
+using ElementsTask.Data.PlayerProgression;
+using ElementsTask.Data.PlayerProgression.Services;
 
-namespace ElementsTask.Core.Services
+namespace ElementsTask.Data.BlockFieldCore.Services
 {
     public class BlockFieldCreator
     {

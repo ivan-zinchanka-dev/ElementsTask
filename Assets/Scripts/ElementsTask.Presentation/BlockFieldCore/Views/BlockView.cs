@@ -1,7 +1,7 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
-using ElementsTask.Core.Enums;
-using ElementsTask.Core.Models;
+using ElementsTask.Data.BlockFieldCore.Enums;
+using ElementsTask.Data.BlockFieldCore.Models;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;

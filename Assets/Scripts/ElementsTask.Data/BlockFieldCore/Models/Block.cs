@@ -1,6 +1,6 @@
-﻿using ElementsTask.Core.Enums;
+﻿using ElementsTask.Data.BlockFieldCore.Enums;
 
-namespace ElementsTask.Core.Models
+namespace ElementsTask.Data.BlockFieldCore.Models
 {
     public struct Block
     {

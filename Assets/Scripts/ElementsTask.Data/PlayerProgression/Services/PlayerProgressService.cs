@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace ElementsTask.Core.Services
+namespace ElementsTask.Data.PlayerProgression.Services
 {
     public class PlayerProgressService : IPlayerProgressService
     {

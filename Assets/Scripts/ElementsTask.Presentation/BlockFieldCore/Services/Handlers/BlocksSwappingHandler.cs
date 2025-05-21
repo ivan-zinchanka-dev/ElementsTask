@@ -2,7 +2,7 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using ElementsTask.Common.Extensions;
-using ElementsTask.Core.Enums;
+using ElementsTask.Data.BlockFieldCore.Enums;
 using ElementsTask.Presentation.BlockFieldCore.Enums;
 using ElementsTask.Presentation.BlockFieldCore.Models;
 using ElementsTask.Presentation.BlockFieldCore.Views;

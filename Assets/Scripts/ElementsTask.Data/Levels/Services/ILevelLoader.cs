@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using ElementsTask.Core.Models;
+using ElementsTask.Data.BlockFieldCore.Models;
 
-namespace ElementsTask.Core.Services
+namespace ElementsTask.Data.Levels.Services
 {
     public interface ILevelLoader
     {

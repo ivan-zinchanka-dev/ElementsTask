@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace ElementsTask.Core.Models
+namespace ElementsTask.Data.BlockFieldCore.Models
 {
     public class BlockField
     {

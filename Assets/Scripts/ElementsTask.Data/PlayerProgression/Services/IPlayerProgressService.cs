@@ -1,4 +1,4 @@
-﻿namespace ElementsTask.Core.Services
+﻿namespace ElementsTask.Data.PlayerProgression.Services
 {
     public interface IPlayerProgressService
     {

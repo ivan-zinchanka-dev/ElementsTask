@@ -1,6 +1,6 @@
 {
-    "name": "ElementsTask.Core",
-    "rootNamespace": "ElementsTask.Core",
+    "name": "ElementsTask.Data",
+    "rootNamespace": "ElementsTask.Data",
     "references": [
         "GUID:d3db2a4df4abe314cb3f9a78b2ae02eb"
     ],

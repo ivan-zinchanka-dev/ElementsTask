@@ -1,8 +1,7 @@
 ﻿using System;
-using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 
-namespace ElementsTask.Core.Models
+namespace ElementsTask.Data.BlockFieldCore.Models
 {
     [Serializable]
     public class BlockType : IEquatable<BlockType>

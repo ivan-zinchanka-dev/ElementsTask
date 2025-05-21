@@ -1,7 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using ElementsTask.Core.Services;
+using ElementsTask.Data.PlayerProgression;
+using ElementsTask.Data.PlayerProgression.Services;
 using ElementsTask.Presentation.Balloons;
 using ElementsTask.Presentation.BlockFieldCore.Views;
 using Sirenix.OdinInspector;
