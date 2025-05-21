@@ -12,10 +12,10 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
     public class BlocksDestructionHandler
     {
         private const int TargetMatchCells = 3;
-        private static readonly Vector2Int[] Directions =
-            { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
-        
+        private static readonly Vector2Int[] Directions = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
         private readonly BlockFieldViewGrid _grid;
+
+        private List<UniTask> _destructionTasks;
         
         public BlocksDestructionHandler(BlockFieldViewGrid grid)
         {
@@ -24,7 +24,10 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
         
         public async UniTask<bool> SimulateDestructionIfNeedAsync()
         {
-            var destructionTasks = new List<UniTask>();
+            if (_destructionTasks != null)
+            {
+                return false;
+            }
             
             List<HashSet<Vector2Int>> regions = FindRegionsIncludingMatches(_grid, FindMatchLineCells(_grid));
 
@@ -33,6 +36,8 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
                 return false;
             }
 
+            _destructionTasks = new List<UniTask>();
+            
             foreach (HashSet<Vector2Int> region in regions)
             {
                 foreach (Vector2Int cellPosition in region)
@@ -41,12 +46,15 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
 
                     if (block != null)
                     {
-                        destructionTasks.Add(block.SelfDestroyAsync());
+                        _destructionTasks.Add(block.SelfDestroyAsync());
                     }
                 }
             }
 
-            await UniTask.WhenAll(destructionTasks);
+            await UniTask.WhenAll(_destructionTasks);
+            
+            _destructionTasks.Clear();
+            _destructionTasks = null;
             return true;
         }
         
