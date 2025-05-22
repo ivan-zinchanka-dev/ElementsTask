@@ -30,11 +30,14 @@ namespace ElementsTask.Presentation.Management
         [Button]
         public async Task NextAsync()
         {
+            _blockFieldView.Cleanup();
+            
             PlayerProgress playerProgress = await _progressService.GetPlayerProgressAsync();
+            playerProgress.BlockFieldState.Clear();
             playerProgress.CurrentLevelIndex++;
             await playerProgress.SaveAsync();
             
-            await RestartAsync();
+            await _blockFieldView.InitializeAsync();
         }
 
         private async void Awake()
