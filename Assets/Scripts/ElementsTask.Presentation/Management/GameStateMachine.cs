@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using ElementsTask.Data.PlayerProgression.Models;
 using ElementsTask.Data.PlayerProgression.Services;
 using ElementsTask.Presentation.BlockFieldCore.Views;
@@ -43,6 +44,21 @@ namespace ElementsTask.Presentation.Management
         private async void Awake()
         {
             await _blockFieldView.InitializeAsync();
+        }
+
+        private void OnEnable()
+        {
+            _blockFieldView.OnAllBlocksDestroyed.AddListener(OnAllBlocksDestroyed);
+        }
+        
+        private async void OnAllBlocksDestroyed()
+        {
+            await NextAsync();
+        }
+        
+        private void OnDisable()
+        {
+            _blockFieldView.OnAllBlocksDestroyed.RemoveListener(OnAllBlocksDestroyed);
         }
 
         private void OnDestroy()

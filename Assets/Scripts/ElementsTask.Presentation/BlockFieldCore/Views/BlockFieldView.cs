@@ -1,10 +1,8 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using DG.Tweening;
 using ElementsTask.Common.Components.Grid;
 using ElementsTask.Common.Extensions;
-using ElementsTask.Data.BlockFieldCore.Enums;
 using ElementsTask.Data.BlockFieldCore.Models;
 using ElementsTask.Data.BlockFieldCore.Services;
 using ElementsTask.Data.PlayerProgression.Models;
@@ -13,6 +11,7 @@ using ElementsTask.Presentation.BlockFieldCore.Models;
 using ElementsTask.Presentation.BlockFieldCore.Services.Factories;
 using ElementsTask.Presentation.BlockFieldCore.Services.Handlers;
 using UnityEngine;
+using UnityEngine.Events;
 using VContainer;
 using VContainer.Unity;
 
@@ -24,7 +23,9 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
         private BlockFieldViewOptions _options;
         [SerializeField] 
         private BlockFieldViewGrid _grid;
-     
+        [field:SerializeField] 
+        public UnityEvent OnAllBlocksDestroyed { get; private set; }
+
         [Inject]
         private Camera _camera;
         [Inject]
@@ -145,16 +146,17 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
         {
             if (IsPointerDownReceived(out Vector3 pointerPosition) && _selectedCell != null)
             {
-                _blocksSwappingHandler.TryMoveBlockAsync(_selectedCell, pointerPosition).ContinueWith(moved =>
+                _blocksSwappingHandler.TryMoveBlockAsync(_selectedCell, pointerPosition).ContinueWith(movedSuccessfully =>
                 {
-                    if (moved)
+                    if (movedSuccessfully)
                     {
                         _grid.SaveBlockFieldState();
-                        NormalizeFieldAsync().ContinueWith(needSave =>
+                        NormalizeFieldAsync().ContinueWith(fieldStateChanged =>
                         {
-                            if (needSave)
+                            if (fieldStateChanged)
                             {
                                 _grid.SaveBlockFieldState();
+                                FireAllBlocksDestroyedIfNeed();
                             }
                         });
                     }
@@ -168,7 +170,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
         private async UniTask<bool> NormalizeFieldAsync()
         {
             bool normalizationCompleted = false;
-            bool needSave = false;
+            bool fieldStateChanged = false;
             
             while (!normalizationCompleted)
             {
@@ -177,7 +179,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
 
                 if (fallingSimulated || destructionSimulated)
                 {
-                    needSave = true;
+                    fieldStateChanged = true;
                 }
 
                 if (!fallingSimulated && !destructionSimulated)
@@ -186,7 +188,15 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
                 }
             }
 
-            return needSave;
+            return fieldStateChanged;
+        }
+
+        private void FireAllBlocksDestroyedIfNeed()
+        {
+            if (_grid.All(cell => cell.Content == null))
+            {
+                OnAllBlocksDestroyed?.Invoke();
+            }
         }
     }
 }
