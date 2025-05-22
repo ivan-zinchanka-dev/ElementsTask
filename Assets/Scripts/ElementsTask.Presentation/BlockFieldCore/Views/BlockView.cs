@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using ElementsTask.Data.BlockFieldCore.Enums;
 using ElementsTask.Data.BlockFieldCore.Models;
@@ -25,6 +26,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
         public UnityEvent<BlockView> OnSelected { get; private set; }
         
         private Block _block;
+        private readonly CancellationTokenSource _destructionStoppingTokenSource = new();
         
         public int SortingOrder
         {
@@ -76,15 +78,32 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
             SwitchState(BlockState.Idle);
         }
 
-        public async UniTask SelfDestroyAsync()
+        public void DestroyInstantly()
+        {
+            if (State == BlockState.Destroy)
+            {
+                _destructionStoppingTokenSource.Cancel();
+            }
+            
+            Destroy(gameObject);
+            _destructionStoppingTokenSource.Dispose();
+        }
+
+        public async UniTask DestroyAnimatedAsync()
         {
             SwitchState(BlockState.Destroy);
             
             if (_destroyAnimClip != null)
             {
-                await UniTask.Delay(TimeSpan.FromSeconds(_destroyAnimClip.length), DelayType.DeltaTime);
+                await UniTask.Delay(TimeSpan.FromSeconds(_destroyAnimClip.length), DelayType.DeltaTime, 
+                    cancellationToken:_destructionStoppingTokenSource.Token);
             }
-            
+
+            if (_destructionStoppingTokenSource.IsCancellationRequested)
+            {
+                return;
+            }
+
             OnSelected.RemoveAllListeners();
             Destroy(gameObject);
             

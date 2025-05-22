@@ -46,7 +46,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
 
                     if (block != null)
                     {
-                        _destructionTasks.Add(block.SelfDestroyAsync());
+                        _destructionTasks.Add(block.DestroyAnimatedAsync());
                     }
                 }
             }

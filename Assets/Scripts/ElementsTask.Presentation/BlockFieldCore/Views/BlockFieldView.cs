@@ -119,12 +119,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
                 if (cell.Content != null)
                 {
                     cell.Content.OnSelected.RemoveListener(OnBlockSelected);
-                    Destroy(cell.Content.gameObject);
-                    
-                    /*if (cell.Content.State != BlockState.Destroy)
-                    {
-                        
-                    }*/
+                    cell.Content.DestroyInstantly();
                 }
             }
         }
