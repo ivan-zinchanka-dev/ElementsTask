@@ -21,6 +21,10 @@ namespace ElementsTask.Presentation.Balloons.Views
         [MinMaxSlider(0f, 10f)]
         private Vector2 _spawnDelaySecondsRange = new Vector2(2f, 6f);
         
+        [SerializeField]
+        [MinMaxSlider(0f, 3f)]
+        private Vector2 _balloonSpeedFactorRange = new Vector2(0.5f, 1.5f);
+        
         [SerializeField] 
         private RectTransform _area;
         [SerializeField]
@@ -58,7 +62,7 @@ namespace ElementsTask.Presentation.Balloons.Views
                             Quaternion.identity,
                             transform);
                         
-                        balloon.Animation.FlyToRightAsync(_animationData).ContinueWith(() =>
+                        balloon.Animation.FlyToRightAsync(RandomizeBalloonSpeed(_animationData)).ContinueWith(() =>
                         {
                             _activeBalloons.Remove(balloon);
                             DestroyBalloon(balloon);
@@ -74,7 +78,7 @@ namespace ElementsTask.Presentation.Balloons.Views
                             Quaternion.identity,
                             transform);
                         
-                        balloon.Animation.FlyToLeftAsync(_animationData).ContinueWith(() =>
+                        balloon.Animation.FlyToLeftAsync(RandomizeBalloonSpeed(_animationData)).ContinueWith(() =>
                         {
                             _activeBalloons.Remove(balloon);
                             DestroyBalloon(balloon);
@@ -94,6 +98,22 @@ namespace ElementsTask.Presentation.Balloons.Views
             _area.GetWorldCorners(_cachedAreaCorners);
             
             StartAsync(CancellationToken.None).Forget();
+        }
+
+        private HorizontalSinusAnimation.Data RandomizeBalloonSpeed(HorizontalSinusAnimation.Data animationData)
+        {
+            float duration = animationData.Duration *
+                             Random.Range(_balloonSpeedFactorRange.x, _balloonSpeedFactorRange.y);
+            
+            Debug.Log($"duration: {duration}");
+            
+            return new HorizontalSinusAnimation.Data()
+            {
+                Duration = duration,
+                Distance = animationData.Distance,
+                Frequency = animationData.Frequency,
+                Amplitude = animationData.Amplitude,
+            };
         }
 
         private BalloonKind GetRandomBalloonKind()

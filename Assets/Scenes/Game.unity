@@ -1051,8 +1051,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 2.56}
-  m_SizeDelta: {x: 7, y: 4.2}
+  m_AnchoredPosition: {x: 0, y: 2.3042018}
+  m_SizeDelta: {x: 7, y: 3.8643}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1537733659
 MonoBehaviour:
@@ -1061,13 +1061,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1537733657}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2f9281de53324153a669793a68c182fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _maxBalloons: 3
   _spawnDelaySecondsRange: {x: 2, y: 6}
+  _balloonSpeedFactorRange: {x: 0.5, y: 1.5}
   _area: {fileID: 1537733658}
   _animationData:
     Duration: 20
