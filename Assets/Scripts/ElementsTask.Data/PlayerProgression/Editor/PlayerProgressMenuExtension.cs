@@ -1,4 +1,5 @@
-﻿using ElementsTask.Data.PlayerProgression.Services;
+﻿#if UNITY_EDITOR
+using ElementsTask.Data.PlayerProgression.Services;
 using UnityEditor;
 
 namespace ElementsTask.Data.PlayerProgression.Editor
@@ -23,3 +24,4 @@ namespace ElementsTask.Data.PlayerProgression.Editor
         }
     }
 }
+#endif
