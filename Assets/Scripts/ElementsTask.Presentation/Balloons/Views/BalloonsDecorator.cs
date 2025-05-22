@@ -34,21 +34,10 @@ namespace ElementsTask.Presentation.Balloons.Views
         private BalloonViewsFactory _balloonViewsFactory;
         
         private readonly List<BalloonView> _activeBalloons = new();
+        private readonly CancellationTokenSource _stoppingTokenSource = new();
         private Vector3[] _cachedAreaCorners;
-
-        private void Reset()
-        {
-            _area = GetComponent<RectTransform>();
-            _animationData = new HorizontalSinusAnimation.Data()
-            {
-                Duration = 20f,
-                Distance = 9f,
-                Frequency = 1f,
-                Amplitude = 0.75f,
-            };
-        }
-
-        public async UniTask StartAsync(CancellationToken stoppingToken)
+        
+        private async UniTask StartAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -97,15 +86,25 @@ namespace ElementsTask.Presentation.Balloons.Views
             _cachedAreaCorners = new Vector3[4]; 
             _area.GetWorldCorners(_cachedAreaCorners);
             
-            StartAsync(CancellationToken.None).Forget();
+            StartAsync(_stoppingTokenSource.Token).Forget();
         }
 
+        private void Reset()
+        {
+            _area = GetComponent<RectTransform>();
+            _animationData = new HorizontalSinusAnimation.Data()
+            {
+                Duration = 20f,
+                Distance = 9f,
+                Frequency = 1f,
+                Amplitude = 0.75f,
+            };
+        }
+        
         private HorizontalSinusAnimation.Data RandomizeBalloonSpeed(HorizontalSinusAnimation.Data animationData)
         {
-            float duration = animationData.Duration *
-                             Random.Range(_balloonSpeedFactorRange.x, _balloonSpeedFactorRange.y);
-            
-            Debug.Log($"duration: {duration}");
+            float duration = 
+                animationData.Duration * Random.Range(_balloonSpeedFactorRange.x, _balloonSpeedFactorRange.y);
             
             return new HorizontalSinusAnimation.Data()
             {
@@ -154,6 +153,11 @@ namespace ElementsTask.Presentation.Balloons.Views
                 Destroy(balloon.gameObject);
             }
         }
-        
+
+        private void OnDestroy()
+        {
+            _stoppingTokenSource?.Cancel();
+            _stoppingTokenSource?.Dispose();
+        }
     }
 }

@@ -82,7 +82,6 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
             return result;
         }
         
-        
         private void AddMatchesInLine(
             HashSet<Vector2Int> result,
             int length,

@@ -55,7 +55,21 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
 
             _cachedSortingOrders = new BlockSortingOrdersDictionary(fieldModel.Size);
             Task<PlayerProgress> getPlayerProgressTask = _playerProgressService.GetPlayerProgressAsync();
+            CreateBlockViews(fieldModel);
+
+            PlayerProgress playerProgress = getPlayerProgressTask.Result;
+            ConfigureServices(playerProgress);
             
+            foreach (GridCell<BlockView> cell in _grid)
+            {
+                cell.Content?.OnSelected.AddListener(OnBlockSelected);
+            }
+            
+            enabled = true;
+        }
+
+        private void CreateBlockViews(BlockField fieldModel)
+        {
             for (int y = 0; y < fieldModel.Height; y++)
             {
                 for (int x = 0; x < fieldModel.Width; x++)
@@ -81,9 +95,10 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
                     }
                 }
             }
+        }
 
-            PlayerProgress playerProgress = getPlayerProgressTask.Result;
-            
+        private void ConfigureServices(PlayerProgress playerProgress)
+        {
             var diBuilder = new ContainerBuilder();
             diBuilder.RegisterComponent<BlockFieldViewGrid>(_grid.WithChangesTracking(playerProgress));
             diBuilder.RegisterInstance<BlockFieldViewOptions>(_options);
@@ -97,23 +112,17 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
             _blocksSwappingHandler = _selfDiContainer.Resolve<BlocksSwappingHandler>();
             _blocksFallingHandler = _selfDiContainer.Resolve<BlocksFallingHandler>();
             _blocksDestructionHandler = _selfDiContainer.Resolve<BlocksDestructionHandler>();
-            
-            foreach (GridCell<BlockView> cell in _grid)
-            {
-                cell.Content?.OnSelected.AddListener(OnBlockSelected);
-            }
-
-            enabled = true;
         }
-        
+
         public void Cleanup()
         {
             enabled = false;
             
             _blocksSwappingHandler?.Dispose();
             _blocksFallingHandler?.Dispose();
+            _blocksDestructionHandler?.Dispose();
             
-            _selfDiContainer.Dispose();
+            _selfDiContainer?.Dispose();
             
             foreach (GridCell<BlockView> cell in _grid)
             {

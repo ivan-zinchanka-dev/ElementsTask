@@ -130,7 +130,6 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
 
         public void Dispose()
         {
-            Debug.Log("DISPOSE FALLING");
             _fallingTween.Kill();
             DOTween.Kill(BlocksFallingTweenGroupId);
         }

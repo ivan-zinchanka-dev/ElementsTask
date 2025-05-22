@@ -25,18 +25,18 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
         [field:SerializeField] 
         public UnityEvent<BlockView> OnSelected { get; private set; }
         
-        private Block _block;
         private readonly CancellationTokenSource _destructionStoppingTokenSource = new();
+        private Block _block;
+        
+        public BlockType Type => _block.Type;
+        public Block Model => _block;
+        public BlockState State { get; private set; } = BlockState.Idle;
         
         public int SortingOrder
         {
             get =>_spriteRenderer.sortingOrder;
             set => _spriteRenderer.sortingOrder = value;
         }
-        
-        public BlockType Type => _block.Type;
-        public Block Model => _block;
-        public BlockState State { get; private set; } = BlockState.Idle;
         
         public BlockView SetModel(Block block)
         {

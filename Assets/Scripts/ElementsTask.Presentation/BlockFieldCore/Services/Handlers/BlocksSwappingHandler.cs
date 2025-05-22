@@ -158,7 +158,6 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
 
         public void Dispose()
         {
-            Debug.Log("DISPOSE SWAPPING");
             _movingTween.Kill();
             DOTween.Kill(BlocksSwappingTweenGroupId);
         }
