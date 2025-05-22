@@ -3,7 +3,6 @@ using ElementsTask.Common.Data.Crypto.ROS;
 using ElementsTask.Data.BlockFieldCore.Services;
 using ElementsTask.Data.Levels.Services;
 using ElementsTask.Data.PlayerProgression.Services;
-using ElementsTask.Presentation.Balloons;
 using ElementsTask.Presentation.Balloons.Factories;
 using ElementsTask.Presentation.BlockFieldCore.Services.Factories;
 using ElementsTask.Presentation.BlockFieldCore.Views;
@@ -12,7 +11,7 @@ using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
-namespace ElementsTask.Presentation.Management
+namespace ElementsTask.Presentation.Management.Services
 {
     public class GameSceneScope : LifetimeScope
     {
