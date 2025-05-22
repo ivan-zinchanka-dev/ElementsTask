@@ -1,5 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using ElementsTask.Common.Components.View;
 using ElementsTask.Data.PlayerProgression.Models;
 using ElementsTask.Data.PlayerProgression.Services;
 using ElementsTask.Presentation.BlockFieldCore.Views;
@@ -11,6 +11,9 @@ namespace ElementsTask.Presentation.Management
 {
     public class GameStateMachine : MonoBehaviour
     {
+        [SerializeField]
+        private AspectRatioScaler _foregroundAspectRatioScaler;
+        
         [Inject] 
         private IPlayerProgressService _progressService;
         [Inject] 
@@ -44,6 +47,7 @@ namespace ElementsTask.Presentation.Management
         private async void Awake()
         {
             await _blockFieldView.InitializeAsync();
+            _foregroundAspectRatioScaler.Scale();
         }
 
         private void OnEnable()

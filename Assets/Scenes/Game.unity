@@ -763,6 +763,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629222443}
   m_CullTransparentMesh: 1
+--- !u!1 &801097631
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 801097632}
+  - component: {fileID: 801097633}
+  m_Layer: 0
+  m_Name: foreground
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &801097632
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 801097631}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -2.945, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1496941454}
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &801097633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 801097631}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31b516c1fa0b46b0abd7f117742dba5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _referenceAspect: {x: 1080, y: 2340}
+  _minScale: 0.9
+  _maxScale: 1.25
 --- !u!1 &945397796
 GameObject:
   m_ObjectHideFlags: 0
@@ -792,6 +840,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19bd75ef61f948738e34c1f49bde6ff1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _foregroundAspectRatioScaler: {fileID: 801097633}
 --- !u!4 &945397798
 Transform:
   m_ObjectHideFlags: 0
@@ -927,13 +976,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1496941452}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.785, y: -2.945, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.785, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_Father: {fileID: 801097632}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1496941455
 MonoBehaviour:
@@ -951,6 +1000,9 @@ MonoBehaviour:
     <SwappingDuration>k__BackingField: 0.15
     <FallingSpeed>k__BackingField: 0.15
   _grid: {fileID: 1496941456}
+  <OnAllBlocksDestroyed>k__BackingField:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1496941456
 MonoBehaviour:
   m_ObjectHideFlags: 0
