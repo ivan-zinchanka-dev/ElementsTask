@@ -50,7 +50,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
 
         private static BlockMovingDirection GetMovingDirection(Vector3 inputOffset)
         {
-            const float minOffsetMagnitude = 0.5f;
+            const float minOffsetMagnitude = 0.35f;
 
             if (inputOffset.magnitude < minOffsetMagnitude)
             {

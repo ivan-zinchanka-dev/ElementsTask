@@ -150,7 +150,13 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
                     if (moved)
                     {
                         _grid.SaveBlockFieldState();
-                        NormalizeFieldAsync().Forget();
+                        NormalizeFieldAsync().ContinueWith(needSave =>
+                        {
+                            if (needSave)
+                            {
+                                _grid.SaveBlockFieldState();
+                            }
+                        });
                     }
                 });
                 
@@ -159,22 +165,28 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
             
         }
         
-        private async UniTask NormalizeFieldAsync()
+        private async UniTask<bool> NormalizeFieldAsync()
         {
             bool normalizationCompleted = false;
+            bool needSave = false;
             
             while (!normalizationCompleted)
             {
                 bool fallingSimulated = await _blocksFallingHandler.SimulateFallingIfNeedAsync();
                 bool destructionSimulated = await _blocksDestructionHandler.SimulateDestructionIfNeedAsync();
 
+                if (fallingSimulated || destructionSimulated)
+                {
+                    needSave = true;
+                }
+
                 if (!fallingSimulated && !destructionSimulated)
                 {
-                    _grid.SaveBlockFieldState();
                     normalizationCompleted = true;
                 }
             }
+
+            return needSave;
         }
-        
     }
 }
