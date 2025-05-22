@@ -1,8 +1,10 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using ElementsTask.Common.Components.Grid;
 using ElementsTask.Common.Extensions;
+using ElementsTask.Data.BlockFieldCore.Enums;
 using ElementsTask.Data.BlockFieldCore.Models;
 using ElementsTask.Data.BlockFieldCore.Services;
 using ElementsTask.Data.PlayerProgression.Models;
@@ -99,16 +101,14 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
             {
                 cell.Content?.OnSelected.AddListener(OnBlockSelected);
             }
-        }
 
-        public async Task ReInitialize()
-        {
-            Cleanup();
-            await InitializeAsync();
+            enabled = true;
         }
         
         public void Cleanup()
         {
+            enabled = false;
+            
             _blocksSwappingHandler?.Dispose();
             _blocksFallingHandler?.Dispose();
             
@@ -120,6 +120,11 @@ namespace ElementsTask.Presentation.BlockFieldCore.Views
                 {
                     cell.Content.OnSelected.RemoveListener(OnBlockSelected);
                     Destroy(cell.Content.gameObject);
+                    
+                    /*if (cell.Content.State != BlockState.Destroy)
+                    {
+                        
+                    }*/
                 }
             }
         }

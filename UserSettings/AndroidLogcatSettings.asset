@@ -3,17 +3,11 @@
     "m_SelectedPackage": {
         "deviceId": "R58M52KZNHR",
         "name": "com.janzi.elementstask",
-        "processId": 19593,
+        "processId": 14740,
         "exited": false
     },
     "m_SelectedPriority": 0,
     "m_KnownPackagesForSerialization": [
-        {
-            "deviceId": "R58M52KZNHR",
-            "name": "com.janzi.elementstask",
-            "processId": 18063,
-            "exited": true
-        },
         {
             "deviceId": "R58M52KZNHR",
             "name": "com.sec.android.app.launcher",
@@ -23,7 +17,31 @@
         {
             "deviceId": "R58M52KZNHR",
             "name": "com.janzi.elementstask",
-            "processId": 19593,
+            "processId": 8166,
+            "exited": true
+        },
+        {
+            "deviceId": "R58M52KZNHR",
+            "name": "com.janzi.elementstask",
+            "processId": 8988,
+            "exited": true
+        },
+        {
+            "deviceId": "R58M52KZNHR",
+            "name": "com.janzi.elementstask",
+            "processId": 9391,
+            "exited": true
+        },
+        {
+            "deviceId": "R58M52KZNHR",
+            "name": "com.janzi.elementstask",
+            "processId": 9648,
+            "exited": true
+        },
+        {
+            "deviceId": "R58M52KZNHR",
+            "name": "com.janzi.elementstask",
+            "processId": 14740,
             "exited": false
         }
     ],

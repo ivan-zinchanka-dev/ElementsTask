@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
 {
-    public class BlocksDestructionHandler
+    public class BlocksDestructionHandler : IDisposable
     {
         private const int TargetMatchCells = 3;
         private static readonly Vector2Int[] Directions = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
@@ -57,7 +57,6 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
             _destructionTasks = null;
             return true;
         }
-        
         
         private HashSet<Vector2Int> FindMatchLineCells(BlockFieldViewGrid grid)
         {
@@ -182,6 +181,13 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
         {
             return cell != null && IsRelevant(cell.Content) && cell.Content.Type == blockType;
         }
-        
+
+        public void Dispose()
+        {
+            if (_destructionTasks != null)
+            {
+                _destructionTasks.Clear();
+            }
+        }
     }
 }

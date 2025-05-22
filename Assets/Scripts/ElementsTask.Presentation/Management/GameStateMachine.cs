@@ -18,11 +18,13 @@ namespace ElementsTask.Presentation.Management
         [Button]
         public async Task RestartAsync()
         {
+            _blockFieldView.Cleanup();
+            
             PlayerProgress playerProgress = await _progressService.GetPlayerProgressAsync();
             playerProgress.BlockFieldState.Clear();
             await playerProgress.SaveAsync();
-            
-            await _blockFieldView.ReInitialize();
+
+            await _blockFieldView.InitializeAsync();
         }
 
         [Button]

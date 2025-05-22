@@ -13,6 +13,8 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
 {
     public class BlocksSwappingHandler : IDisposable
     {
+        private const string BlocksSwappingTweenGroupId = "blocks_swapping";
+        
         private readonly BlockFieldViewOptions _viewOptions;
         private readonly BlockFieldViewGrid _grid;
         private readonly BlockSortingOrdersDictionary _cachedSortingOrders;
@@ -42,6 +44,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
             if (pair != null)
             {
                 _movingTween = BeginSwap(selectedCell, pair);
+                _movingTween.SetId(BlocksSwappingTweenGroupId);
                 await _movingTween.ToUniTask();
             }
             
@@ -135,7 +138,8 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
                 swappingSequence
                     .Join(firstCell.Content.transform
                     .DOMove(firstCell.Transform.position, _viewOptions.SwappingDuration)
-                    .SetEase(Ease.Flash));
+                    .SetEase(Ease.Flash)
+                    .SetId(BlocksSwappingTweenGroupId));
             }
 
             if (secondCell.HasContent)
@@ -145,7 +149,8 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
                 swappingSequence
                     .Join(secondCell.Content.transform
                         .DOMove(secondCell.Transform.position, _viewOptions.SwappingDuration)
-                        .SetEase(Ease.Flash));
+                        .SetEase(Ease.Flash)
+                        .SetId(BlocksSwappingTweenGroupId));
             }
 
             return swappingSequence;
@@ -153,7 +158,9 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
 
         public void Dispose()
         {
+            Debug.Log("DISPOSE SWAPPING");
             _movingTween.Kill();
+            DOTween.Kill(BlocksSwappingTweenGroupId);
         }
     }
 }

@@ -13,6 +13,8 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
 {
     public class BlocksFallingHandler : IDisposable
     {
+        private const string BlocksFallingTweenGroupId = "blocks_falling";
+        
         private readonly BlockFieldViewOptions _viewOptions;
         private readonly BlockFieldViewGrid _grid;
         private readonly BlockSortingOrdersDictionary _cachedSortingOrders;
@@ -36,14 +38,16 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
                 return false;
             }
             
-            _fallingTween = DOTween.Sequence();
+            _fallingTween = DOTween.Sequence()
+                .SetId(BlocksFallingTweenGroupId);
             bool simulateOnce = false;
             
             while (TrySimulateFalling())
             {
                 await _fallingTween.ToUniTask();
                 simulateOnce = true;
-                _fallingTween = DOTween.Sequence();
+                _fallingTween = DOTween.Sequence()
+                    .SetId(BlocksFallingTweenGroupId);
             }
             
             return simulateOnce;
@@ -73,7 +77,7 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
                     }
                 }
             }
-
+            
             return needSimulation;
         }
         
@@ -102,8 +106,10 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
                 targetCell.Content.OnFall();
                 
                 columnFallingTween.Join(
-                    targetCell.Content.transform.DOMove(targetCell.Transform.position, _viewOptions.FallingSpeed)
-                        .SetEase(Ease.Linear));
+                    targetCell.Content.transform
+                        .DOMove(targetCell.Transform.position, _viewOptions.FallingSpeed)
+                        .SetEase(Ease.Linear)
+                        .SetId(BlocksFallingTweenGroupId));
                 
                 blocks.Add(targetCell.Content);
             }
@@ -116,14 +122,17 @@ namespace ElementsTask.Presentation.BlockFieldCore.Services.Handlers
                 {
                     block.OnLand();
                 }
-            });
+            })
+            .SetId(BlocksFallingTweenGroupId);
             
             return columnFallingTween;
         }
 
         public void Dispose()
         {
+            Debug.Log("DISPOSE FALLING");
             _fallingTween.Kill();
+            DOTween.Kill(BlocksFallingTweenGroupId);
         }
     }
 }
