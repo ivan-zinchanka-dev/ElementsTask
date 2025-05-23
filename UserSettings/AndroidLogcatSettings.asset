@@ -3,7 +3,7 @@
     "m_SelectedPackage": {
         "deviceId": "R58M52KZNHR",
         "name": "com.janzi.elementstask",
-        "processId": 3626,
+        "processId": 9245,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -13,12 +13,6 @@
             "name": "com.sec.android.app.launcher",
             "processId": 5504,
             "exited": false
-        },
-        {
-            "deviceId": "R58M52KZNHR",
-            "name": "com.janzi.elementstask",
-            "processId": 8988,
-            "exited": true
         },
         {
             "deviceId": "R58M52KZNHR",
@@ -42,6 +36,12 @@
             "deviceId": "R58M52KZNHR",
             "name": "com.janzi.elementstask",
             "processId": 3626,
+            "exited": true
+        },
+        {
+            "deviceId": "R58M52KZNHR",
+            "name": "com.janzi.elementstask",
+            "processId": 9245,
             "exited": false
         }
     ],
