@@ -83,10 +83,5 @@ namespace ElementsTask.Presentation.Management.Services
         {
             _blockFieldView.OnAllBlocksDestroyed.RemoveListener(OnAllBlocksDestroyed);
         }
-
-        private void OnDestroy()
-        {
-            _blockFieldView.Cleanup();
-        }
     }
 }
